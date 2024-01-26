@@ -135,31 +135,18 @@ namespace TopLearn.DataLayer.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("WalletTypeTypeId")
+                    b.Property<string>("WalletType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("WalletTypeId")
                         .HasColumnType("int");
 
                     b.HasKey("WalletId");
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("WalletTypeTypeId");
-
                     b.ToTable("Wallet");
-                });
-
-            modelBuilder.Entity("TopLearn.DataLayer.Entities.Wallet.WalletType", b =>
-                {
-                    b.Property<int>("TypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TypeTitle")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.HasKey("TypeId");
-
-                    b.ToTable("WalletType");
                 });
 
             modelBuilder.Entity("TopLearn.DataLayer.Entities.User.UserRole", b =>
@@ -189,15 +176,7 @@ namespace TopLearn.DataLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TopLearn.DataLayer.Entities.Wallet.WalletType", "WalletType")
-                        .WithMany("Wallets")
-                        .HasForeignKey("WalletTypeTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("User");
-
-                    b.Navigation("WalletType");
                 });
 
             modelBuilder.Entity("TopLearn.DataLayer.Entities.User.Role", b =>
@@ -209,11 +188,6 @@ namespace TopLearn.DataLayer.Migrations
                 {
                     b.Navigation("UserRoles");
 
-                    b.Navigation("Wallets");
-                });
-
-            modelBuilder.Entity("TopLearn.DataLayer.Entities.Wallet.WalletType", b =>
-                {
                     b.Navigation("Wallets");
                 });
 #pragma warning restore 612, 618

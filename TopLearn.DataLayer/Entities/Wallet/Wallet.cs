@@ -10,7 +10,7 @@ namespace TopLearn.DataLayer.Entities.Wallet
     {
         public Wallet()
         {
-            
+
         }
         [Key]
         public int WalletId { get; set; }
@@ -37,9 +37,11 @@ namespace TopLearn.DataLayer.Entities.Wallet
         [Display(Name = "تاریخ و ساعت")]
         public DateTime CreateDate { get; set; }
 
+        public int WalletTypeId { get; set; }
+
+        public string WalletType { get; set; }
 
         public virtual User.User User { get; set; }
-        public virtual WalletType WalletType { get; set; }
 
 
     }

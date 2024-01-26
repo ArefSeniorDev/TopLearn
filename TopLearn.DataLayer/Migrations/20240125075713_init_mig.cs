@@ -42,18 +42,6 @@ namespace TopLearn.DataLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WalletType",
-                columns: table => new
-                {
-                    TypeId = table.Column<int>(type: "int", nullable: false),
-                    TypeTitle = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WalletType", x => x.TypeId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserRoles",
                 columns: table => new
                 {
@@ -91,7 +79,8 @@ namespace TopLearn.DataLayer.Migrations
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     IsPay = table.Column<bool>(type: "bit", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    WalletTypeTypeId = table.Column<int>(type: "int", nullable: false)
+                    WalletTypeId = table.Column<int>(type: "int", nullable: false),
+                    WalletType = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -101,12 +90,6 @@ namespace TopLearn.DataLayer.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Wallet_WalletType_WalletTypeTypeId",
-                        column: x => x.WalletTypeTypeId,
-                        principalTable: "WalletType",
-                        principalColumn: "TypeId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -124,11 +107,6 @@ namespace TopLearn.DataLayer.Migrations
                 name: "IX_Wallet_UserId",
                 table: "Wallet",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Wallet_WalletTypeTypeId",
-                table: "Wallet",
-                column: "WalletTypeTypeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -144,9 +122,6 @@ namespace TopLearn.DataLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "WalletType");
         }
     }
 }

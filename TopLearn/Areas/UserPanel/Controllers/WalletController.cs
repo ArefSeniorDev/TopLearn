@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TopLearn.Core.DTOs;
+using TopLearn.Core.Services;
 using TopLearn.Core.Services.Interfaces;
 
 namespace TopLearn.Areas.UserPanel.Controllers
@@ -26,10 +27,14 @@ namespace TopLearn.Areas.UserPanel.Controllers
         {
             string UserName = User.Identity.Name;
             if (!ModelState.IsValid)
+            {
+                ViewBag.ListWallet = _service.GetUserWallet(UserName);
                 return View(charge);
+            }
 
             _service.AddMoney(UserName, charge.Amount, "شارژ حساب", true);
             ViewBag.IsSuccess = true;
+            ViewBag.ListWallet = _service.GetUserWallet(UserName);
             return View();
         }
     }

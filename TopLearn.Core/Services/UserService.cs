@@ -48,6 +48,8 @@ namespace TopLearn.Core.Services
                 IsPay = IsPay,
                 Description = Description,
                 TypeId = 2,
+                WalletTypeId = 2,
+                WalletType = "واریز",
                 UserId = UserId,
             };
             AddWallet(wallet);

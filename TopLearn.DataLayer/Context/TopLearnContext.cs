@@ -24,17 +24,17 @@ namespace TopLearn.DataLayer.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<WalletType>()
-           .HasData
-           (
-             new WalletType() { TypeId = 1, TypeTitle = "برداشت", },
-             new WalletType() { TypeId = 1, TypeTitle = "واریز", }
-           );
-            modelBuilder.Entity<User>()
-           .HasData
-           (
-            new User() { Email = "Aref@gmail.com", IsActive = true, RegisterDate = DateTime.Now, UserName = "Aref", Password = "Admin", }
-           );
+           // modelBuilder.Entity<WalletType>()
+           //.HasData
+           //(
+           //  new WalletType() { TypeId = 1, TypeTitle = "برداشت", },
+           //  new WalletType() { TypeId = 1, TypeTitle = "واریز", }
+           //);
+           // modelBuilder.Entity<User>()
+           //.HasData
+           //(
+           // new User() { Email = "Aref@gmail.com", IsActive = true, RegisterDate = DateTime.Now, UserName = "Aref", Password = "Admin", }
+           //);
             base.OnModelCreating(modelBuilder);
         }
 
@@ -42,7 +42,6 @@ namespace TopLearn.DataLayer.Context
 
         #region Wallet
         public DbSet<Wallet> Wallet { get; set; }
-        public DbSet<WalletType> WalletType { get; set; }
 
         #endregion
     }
