@@ -25,7 +25,5 @@ namespace TopLearn.Core.Security
             //Convert encoded bytes back to a 'readable' string   
             return BitConverter.ToString(encodedBytes);
         }
-
-
     }
 }

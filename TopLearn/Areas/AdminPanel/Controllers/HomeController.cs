@@ -40,13 +40,40 @@ namespace TopLearn.Areas.AdminPanel.Controllers
         [Route("AdminPanel/CreateUser")]
         public IActionResult CreateUser(List<int> SelectedRoles, CreateUserViewModel createUserViewModel)
         {
-            if (!ModelState.IsValid)
+
+            if (!ModelState.IsValid && createUserViewModel.UserAvatar != null)
             {
                 return View(createUserViewModel);
             }
             int UserId = _service.AddUserFromAdmin(createUserViewModel);
 
             _permission.AddRolesToUsers(SelectedRoles, UserId);
+
+            ViewBag.IsSuccess = true;
+
+            return Redirect("/AdminPanel/Users");
+        }
+
+        #endregion
+        #region EditUser
+        [Route("AdminPanel/EditUser")]
+        public IActionResult EditUser(int UserId)
+        {
+            ViewBag.Roles = _permission.Roles();
+            return View(_service.GetByUserIdForEditAdmin(UserId));
+        }
+        [HttpPost]
+        [Route("AdminPanel/EditUser")]
+        public IActionResult EditUser(List<int> SelectedRoles, CreateUserViewModel createUserViewModel)
+        {
+
+            if (!ModelState.IsValid && createUserViewModel.UserAvatar != null)
+            {
+                return View(createUserViewModel);
+            }
+            int UserId = _service.UpdateUserFromAdmin(createUserViewModel);
+
+            _permission.UpdateRolesToUsers(SelectedRoles, UserId);
 
             return Redirect("/AdminPanel/Users");
         }

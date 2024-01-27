@@ -73,7 +73,7 @@ namespace TopLearn.Core.Services
                 RegisterDate = DateTime.Now,
                 UserName = user.UserName,
             };
-            if (adduser.UserAvatar != null)
+            if (user.UserAvatar != null)
             {
                 string Imagepath = "";
 
@@ -83,6 +83,10 @@ namespace TopLearn.Core.Services
                 {
                     user.UserAvatar.CopyTo(stream);
                 }
+            }
+            else
+            {
+                adduser.UserAvatar = "defult.jpg";
             }
             return AddUser(adduser);
         }
@@ -155,6 +159,17 @@ namespace TopLearn.Core.Services
         public User GetByEmail(string email)
         {
             return _context.Users.SingleOrDefault(x => x.Email == email);
+        }
+
+        public CreateUserViewModel GetByUserIdForEditAdmin(int UserId)
+        {
+            var User = _context.Users.Where(y => y.UserId == UserId).Select(x => new CreateUserViewModel()
+            {
+                Email = x.Email,
+                Password = x.Password,
+                UserName = x.UserName,
+            }).SingleOrDefault();
+            return User;
         }
 
         public User GetByUserName(string UserName)
@@ -256,10 +271,11 @@ namespace TopLearn.Core.Services
             throw new NotImplementedException();
         }
 
-        public void UpdateUser(User user)
+        public int UpdateUser(User user)
         {
             _context.Update(user);
             _context.SaveChanges();
+            return user.UserId;
         }
 
         bool IUserInterface.IsEmailExist(string Email)
@@ -272,6 +288,40 @@ namespace TopLearn.Core.Services
             string hashPassword = PasswordHelper.EncodePasswordMd5(user.Password);
             string email = TextFixer.TextFixed(user.Email);
             return _context.Users.SingleOrDefault(y => y.Email == email && y.Password == hashPassword);
+        }
+
+        int IUserInterface.UpdateUserFromAdmin(CreateUserViewModel user)
+        {
+            User adduser = new User()
+            {
+                ActiveCode = GetUserActiveCode.GetActiveCode(),
+                Email = user.Email,
+                IsActive = true,
+                Password = PasswordHelper.EncodePasswordMd5(user.Password),
+                RegisterDate = DateTime.Now,
+                UserName = user.UserName,
+            };
+            if (user.UserAvatar != null)
+            {
+                string Imagepath = "";
+                if (adduser.UserAvatar != "Defult.jpg")
+                {
+                    Imagepath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/UserAvatar", adduser.UserAvatar);
+                    if (File.Exists(Imagepath))
+                    {
+                        File.Delete(Imagepath);
+                    }
+                }
+                adduser.UserAvatar = GetUserActiveCode.GetActiveCode() + Path.GetExtension(user.UserAvatar.FileName);
+                Imagepath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/UserAvatar", adduser.UserAvatar);
+                using (var stream = new FileStream(Imagepath, FileMode.Create))
+                {
+                    user.UserAvatar.CopyTo(stream);
+                }
+
+            }
+            return UpdateUser(adduser);
+
         }
     }
 }

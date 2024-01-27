@@ -11,5 +11,6 @@ namespace TopLearn.Core.Services
     {
         List<Role> Roles();
         void AddRolesToUsers(List<int> RoleIds, int UserId);
+        void UpdateRolesToUsers(List<int> RoleIds, int UserId);
     }
 }
