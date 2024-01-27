@@ -1,4 +1,4 @@
-﻿@model TopLearn.Core.DTOs.EditProfileViewModel
+﻿@model TopLearn.Core.DTOs.UserViewModel.EditProfileViewModel
 @{
     ViewData["Title"] = "ویرایش حساب کاربری";
 }
@@ -49,7 +49,7 @@
                                         </p>
                                         <input type="file" asp-for="Avatar"/>
                                         <p>لطفا فقط تصویر انتخاب کنید</p>
-                                        <img class="thumbnail" src="/UserAvatar/@Model.AvatarName" style="max-width: 150px" />
+                                        <img id="" class="thumbnail" src="/UserAvatar/@Model.AvatarName" style="max-width: 150px" />
                                     </div>
                                     <div class="col-md-7 col-sm-8 col-xs-12">
                                         <button class="btn btn-success"> ویرایش اطلاعات </button>
@@ -64,4 +64,5 @@
         </div>
     </div>
 </main>
+
 

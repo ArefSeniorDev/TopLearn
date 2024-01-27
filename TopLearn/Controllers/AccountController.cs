@@ -7,12 +7,12 @@ using Microsoft.Win32;
 using NuGet.Protocol.Plugins;
 using System.Security.Claims;
 using TopLearn.Core.Convertors;
-using TopLearn.Core.DTOs;
 using TopLearn.Core.Genrator;
 using TopLearn.Core.Security;
 using TopLearn.Core.Services.Interfaces;
 using TopLearn.DataLayer.Context;
 using TopLearn.DataLayer.Entities.User;
+using TopLearn.Core.DTOs.UserViewModel;
 
 namespace TopLearn.Controllers
 {

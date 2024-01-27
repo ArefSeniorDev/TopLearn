@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace TopLearn.Core.DTOs
+namespace TopLearn.Core.DTOs.UserViewModel
 {
     public class ChargeWalletViewModel
     {

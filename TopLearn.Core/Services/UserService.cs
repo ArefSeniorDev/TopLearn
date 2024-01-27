@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TopLearn.Core.Convertors;
-using TopLearn.Core.DTOs;
+using TopLearn.Core.DTOs.UserViewModel;
 using TopLearn.Core.Genrator;
 using TopLearn.Core.Security;
 using TopLearn.Core.Services.Interfaces;
@@ -60,6 +60,31 @@ namespace TopLearn.Core.Services
             _context.Add(user);
             _context.SaveChanges();
             return user.UserId;
+        }
+
+        public int AddUserFromAdmin(CreateUserViewModel user)
+        {
+            User adduser = new User()
+            {
+                ActiveCode = GetUserActiveCode.GetActiveCode(),
+                Email = user.Email,
+                IsActive = true,
+                Password = PasswordHelper.EncodePasswordMd5(user.Password),
+                RegisterDate = DateTime.Now,
+                UserName = user.UserName,
+            };
+            if (adduser.UserAvatar != null)
+            {
+                string Imagepath = "";
+
+                adduser.UserAvatar = GetUserActiveCode.GetActiveCode() + Path.GetExtension(user.UserAvatar.FileName);
+                Imagepath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/UserAvatar", adduser.UserAvatar);
+                using (var stream = new FileStream(Imagepath, FileMode.Create))
+                {
+                    user.UserAvatar.CopyTo(stream);
+                }
+            }
+            return AddUser(adduser);
         }
 
         public void AddWallet(Wallet wallet)
@@ -180,6 +205,34 @@ namespace TopLearn.Core.Services
             return informationUserViewModel;
 
         }
+
+        public UserForAdminViewModel GetUsers(int PageId = 1, string FilterEmail = "", string FilterUserName = "")
+        {
+            IQueryable<User> Result = _context.Users;
+
+            if (!string.IsNullOrEmpty(FilterEmail))
+            {
+                Result = Result.Where(x => x.Email.Contains(FilterEmail));
+            }
+            if (!string.IsNullOrEmpty(FilterUserName))
+            {
+                Result = Result.Where(x => x.UserName.Contains(FilterUserName));
+            }
+            //Show item in page
+            int take = 20;
+            int skip = (PageId - 1) * take;
+
+            UserForAdminViewModel userForAdminViewModel = new UserForAdminViewModel()
+            {
+                CountPage = Result.Count() / take,
+                CurrentPage = PageId,
+                Users = Result.OrderBy(x => x.RegisterDate).Skip(skip).Take(take).ToList(),
+
+            };
+
+            return userForAdminViewModel;
+        }
+
 
         public List<WalletViewModel> GetUserWallet(string username)
         {

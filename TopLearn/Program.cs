@@ -20,6 +20,7 @@ options.UseSqlServer("Integrated Security=SSPI;Persist Security Info=False;Initi
 #region IOC
 builder.Services.AddTransient<IUserInterface, UserService>();
 builder.Services.AddTransient<IViewRenderService, RenderViewToString>();
+builder.Services.AddTransient<IPermissionService, PermissionService>();
 #endregion
 
 #region Auth
@@ -70,5 +71,10 @@ app.UseEndpoints(endpoints =>
       name: "areas",
       pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
     );
+    endpoints.MapControllerRoute(
+  name: "areas",
+  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+);
 });
+
 app.Run();

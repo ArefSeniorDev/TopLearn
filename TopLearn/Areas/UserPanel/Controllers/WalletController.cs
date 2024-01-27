@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TopLearn.Core.DTOs;
+using TopLearn.Core.DTOs.UserViewModel;
 using TopLearn.Core.Services;
 using TopLearn.Core.Services.Interfaces;
 

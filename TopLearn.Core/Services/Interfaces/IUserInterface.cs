@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TopLearn.Core.DTOs;
+using TopLearn.Core.DTOs.UserViewModel;
 using TopLearn.DataLayer.Entities.User;
 using TopLearn.DataLayer.Entities.Wallet;
 
@@ -44,6 +44,10 @@ namespace TopLearn.Core.Services.Interfaces
         void AddMoney(string UserName, int Amount, string Description, bool IsPay = false);
         void AddWallet(Wallet wallet);
         int MaxId();
+        #endregion
+        #region Admin Panel
+        UserForAdminViewModel GetUsers(int PageId=1,string FilterEmail="",string FilterUserName="");
+        int AddUserFromAdmin(CreateUserViewModel user);
         #endregion
     }
 }
