@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using TopLearn.DataLayer.Entities.Permissions;
 using TopLearn.DataLayer.Entities.User;
 using TopLearn.DataLayer.Entities.Wallet;
 
@@ -15,6 +16,7 @@ namespace TopLearn.DataLayer.Context
 
         }
 
+
         #region User
 
         public DbSet<Role> Roles { get; set; }
@@ -24,19 +26,31 @@ namespace TopLearn.DataLayer.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           // modelBuilder.Entity<WalletType>()
-           //.HasData
-           //(
-           //  new WalletType() { TypeId = 1, TypeTitle = "برداشت", },
-           //  new WalletType() { TypeId = 1, TypeTitle = "واریز", }
-           //);
-           // modelBuilder.Entity<User>()
-           //.HasData
-           //(
-           // new User() { Email = "Aref@gmail.com", IsActive = true, RegisterDate = DateTime.Now, UserName = "Aref", Password = "Admin", }
-           //);
+            modelBuilder.Entity<User>().HasQueryFilter(x => !x.IsDeleted);
+            modelBuilder.Entity<Role>().HasQueryFilter(x => !x.IsDeleted);
+
+
+            // modelBuilder.Entity<WalletType>()
+            //.HasData
+            //(
+            //  new WalletType() { TypeId = 1, TypeTitle = "برداشت", },
+            //  new WalletType() { TypeId = 1, TypeTitle = "واریز", }
+            //);
+            // modelBuilder.Entity<User>()
+            //.HasData
+            //(
+            // new User() { Email = "Aref@gmail.com", IsActive = true, RegisterDate = DateTime.Now, UserName = "Aref", Password = "Admin", }
+            //);
             base.OnModelCreating(modelBuilder);
         }
+
+        #endregion
+
+        #region Permission
+
+        public DbSet<Permission> Permission { get; set; }
+
+        public DbSet<RolePermission> RolePermission { get; set; }
 
         #endregion
 

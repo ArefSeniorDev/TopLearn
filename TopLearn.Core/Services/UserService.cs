@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Formatters.Internal;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -113,6 +114,13 @@ namespace TopLearn.Core.Services
             return _context.Users.Any(x => x.UserName == username && x.Password == hashPass);
         }
 
+        public void DeletingUser(int UserId)
+        {
+            var user = GetByUserByUserIdEditAdmin(UserId);
+            user.IsDeleted = true;
+            UpdateUser(user);
+        }
+
         public void EditPassWord(string username, string pass)
         {
             var user = GetByUserName(username);
@@ -161,13 +169,19 @@ namespace TopLearn.Core.Services
             return _context.Users.SingleOrDefault(x => x.Email == email);
         }
 
-        public CreateUserViewModel GetByUserIdForEditAdmin(int UserId)
+        public User GetByUserByUserIdEditAdmin(int UserId)
         {
-            var User = _context.Users.Where(y => y.UserId == UserId).Select(x => new CreateUserViewModel()
+            return _context.Users.SingleOrDefault(y => y.UserId == UserId);
+        }
+
+        public EditUserViewModel GetByUserIdForEditAdmin(int UserId)
+        {
+            var User = _context.Users.Where(y => y.UserId == UserId).Select(x => new EditUserViewModel()
             {
                 Email = x.Email,
-                Password = x.Password,
                 UserName = x.UserName,
+                AvatarName = x.UserAvatar,
+                UserRoles = x.UserRoles.Select(x => x.RoleId).ToList(),
             }).SingleOrDefault();
             return User;
         }
@@ -175,6 +189,33 @@ namespace TopLearn.Core.Services
         public User GetByUserName(string UserName)
         {
             return _context.Users.SingleOrDefault(x => x.UserName == UserName);
+        }
+
+        public UserForAdminViewModel GetDeletedUsers(int PageId = 1, string FilterEmail = "", string FilterUserName = "")
+        {
+            IQueryable<User> Result = _context.Users.IgnoreQueryFilters().Where(x => x.IsDeleted == true);
+
+            if (!string.IsNullOrEmpty(FilterEmail))
+            {
+                Result = Result.Where(x => x.Email.Contains(FilterEmail));
+            }
+            if (!string.IsNullOrEmpty(FilterUserName))
+            {
+                Result = Result.Where(x => x.UserName.Contains(FilterUserName));
+            }
+            //Show item in page
+            int take = 20;
+            int skip = (PageId - 1) * take;
+
+            UserForAdminViewModel userForAdminViewModel = new UserForAdminViewModel()
+            {
+                CountPage = Result.Count() / take,
+                CurrentPage = PageId,
+                Users = Result.OrderBy(x => x.RegisterDate).Skip(skip).Take(take).ToList(),
+
+            };
+
+            return userForAdminViewModel;
         }
 
         public EditProfileViewModel GetEditProfile(string UserName)
@@ -219,6 +260,24 @@ namespace TopLearn.Core.Services
             };
             return informationUserViewModel;
 
+        }
+
+        public InformationUserViewModel GetUserInformation(int UserId)
+        {
+            var user = GetByUserByUserIdEditAdmin(UserId);
+            if (user == null)
+            {
+                return null;
+            }
+            InformationUserViewModel informationUserViewModel = new InformationUserViewModel()
+            {
+                Email = user.Email,
+                UserId = user.UserId,
+                RegisterDate = user.RegisterDate,
+                UserName = user.UserName,
+                Wallet = BalanceUserWallet(user.UserName)
+            };
+            return informationUserViewModel;
         }
 
         public UserForAdminViewModel GetUsers(int PageId = 1, string FilterEmail = "", string FilterUserName = "")
@@ -290,37 +349,39 @@ namespace TopLearn.Core.Services
             return _context.Users.SingleOrDefault(y => y.Email == email && y.Password == hashPassword);
         }
 
-        int IUserInterface.UpdateUserFromAdmin(CreateUserViewModel user)
+        int IUserInterface.UpdateUserFromAdmin(EditUserViewModel EditUser)
         {
-            User adduser = new User()
+            string pass = "";
+            var user = GetByUserByUserIdEditAdmin(EditUser.UserId);
+
+            user.UserId = EditUser.UserId;
+            user.Email = EditUser.Email;
+            user.UserName = EditUser.UserName;
+
+            if (!string.IsNullOrEmpty(EditUser.Password))
             {
-                ActiveCode = GetUserActiveCode.GetActiveCode(),
-                Email = user.Email,
-                IsActive = true,
-                Password = PasswordHelper.EncodePasswordMd5(user.Password),
-                RegisterDate = DateTime.Now,
-                UserName = user.UserName,
-            };
-            if (user.UserAvatar != null)
+                user.Password = PasswordHelper.EncodePasswordMd5(EditUser.Password);
+            }
+            if (EditUser.UserAvatar != null)
             {
                 string Imagepath = "";
-                if (adduser.UserAvatar != "Defult.jpg")
+                if (EditUser.AvatarName != "Defult.jpg")
                 {
-                    Imagepath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/UserAvatar", adduser.UserAvatar);
+                    Imagepath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/UserAvatar", EditUser.AvatarName);
                     if (File.Exists(Imagepath))
                     {
                         File.Delete(Imagepath);
                     }
                 }
-                adduser.UserAvatar = GetUserActiveCode.GetActiveCode() + Path.GetExtension(user.UserAvatar.FileName);
-                Imagepath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/UserAvatar", adduser.UserAvatar);
+                user.UserAvatar = GetUserActiveCode.GetActiveCode() + Path.GetExtension(EditUser.UserAvatar.FileName);
+                Imagepath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/UserAvatar", user.UserAvatar);
                 using (var stream = new FileStream(Imagepath, FileMode.Create))
                 {
-                    user.UserAvatar.CopyTo(stream);
+                    EditUser.UserAvatar.CopyTo(stream);
                 }
 
             }
-            return UpdateUser(adduser);
+            return UpdateUser(user);
 
         }
     }

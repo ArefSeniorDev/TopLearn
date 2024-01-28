@@ -1,0 +1,18 @@
+﻿@using TopLearn.DataLayer.Entities.User;
+@model Role
+@{
+    ViewData["Title"] = "حذف نقش";
+}
+
+<div class="container alert alert-danger">
+    <form method="post">
+        <input type="hidden" asp-for="RoleId"/>
+        <input type="hidden" asp-for="RoleTitle"/>
+        <h2>آیا از حذف نقش "@Model.RoleTitle" مطمئن هستید </h2>
+        <p>
+            <input type="submit" value="حذف کن" class="btn btn-outline btn-danger"/>
+            <a href="/AdminPanel/Index" class="btn btn-outline btn-info">انصراف</a>
+        </p>
+    </form>
+</div>
+

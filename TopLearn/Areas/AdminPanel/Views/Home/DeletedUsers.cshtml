@@ -7,7 +7,7 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">لیست کاربران</h1>
+        <h1 class="page-header">لیست کاربران حذف شده</h1>
     </div>
     <!-- /.col-lg-12 -->
 </div>
@@ -23,9 +23,9 @@
                 <div class="table-responsive">
                     <div id="dataTables-example_wrapper" class="dataTables_wrapper form-inline" role="grid">
                         <div class="row">
-                            <form >
+                            <form>
                                 <div class="col-sm-5 col-md-5">
-                                    <input  type="text" name="filterUserName" class="form-control" placeholder="نام کاربری" />
+                                    <input type="text" name="filterUserName" class="form-control" placeholder="نام کاربری" />
                                 </div>
                                 <div class="col-sm-5 col-md-5">
                                     <input type="text" name="filterEmail" class="form-control" placeholder="ایمیل" />
@@ -48,7 +48,6 @@
                                     <th>ایمیل</th>
                                     <th>وضعیت</th>
                                     <th>تاریخ ثبت نام</th>
-                                    <th>دستورات</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -68,14 +67,6 @@
                                             }
                                         </td>
                                         <td>@user.RegisterDate.ToShamsi()</td>
-                                        <td>
-                                            <a href="/AdminPanel/EditUser?UserId=@user.UserId" class="btn btn-warning btn-sm">
-                                                ویرایش
-                                            </a>
-                                            <a href="/AdminPanel/DeleteUser?UserId=@user.UserId" class="btn btn-danger btn-sm">
-                                                حذف
-                                            </a>
-                                        </td>
                                     </tr>
                                 }
                             </tbody>
