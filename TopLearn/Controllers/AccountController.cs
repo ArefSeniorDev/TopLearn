@@ -203,5 +203,13 @@ namespace TopLearn.Controllers
         }
 
         #endregion
+
+
+        [Route("AccessDenied")]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
     }
 }

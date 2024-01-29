@@ -93,5 +93,26 @@ namespace TopLearn.Core.Services
         {
             return _context.RolePermission.Where(x => x.RoleId == RoleId).Select(x => x.PermissionId).ToList();
         }
+
+        public void UpdatePermissionRole(int RoleId, List<int> Permission)
+        {
+            _context.RolePermission.Where(x => x.RoleId == RoleId).ToList().ForEach(x => _context.RolePermission.Remove(x));
+
+            AddPermissionToRole(RoleId, Permission);
+        }
+
+        public bool CheckPermission(int permissionId, string userName)
+        {
+            int UserId = _context.Users.SingleOrDefault(x => x.UserName == userName).UserId;
+
+            List<int> UserRoles = _context.UserRoles.Where(x => x.UserId == UserId).Select(x => x.RoleId).ToList();
+
+            if (!UserRoles.Any())
+                return false;
+
+            List<int> RolePermission = _context.RolePermission.Where(x => x.PermissionId == permissionId).Select(x => x.RoleId).ToList();
+
+            return RolePermission.Any(x => UserRoles.Contains(x));
+        }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using TopLearn.Core.Convertors;
 using TopLearn.Core.DTOs.RolesViewModel;
 using TopLearn.Core.DTOs.UserViewModel;
+using TopLearn.Core.Security;
 using TopLearn.Core.Services;
 using TopLearn.Core.Services.Interfaces;
 using TopLearn.DataLayer.Entities.User;
@@ -19,11 +20,13 @@ namespace TopLearn.Areas.AdminPanel.Controllers
             _service = userInterface;
             _permission = permissionService;
         }
+        [PermissionChecker(1)]
         public IActionResult Index()
         {
             return View();
         }
         #region UsersPreview
+        [PermissionChecker(2)]
         [Route("AdminPanel/Users")]
         public IActionResult Users(int PageId = 1, string filterUserName = "", string filterEmail = "")
         {
@@ -35,11 +38,13 @@ namespace TopLearn.Areas.AdminPanel.Controllers
 
         #region CreateUser
         [Route("AdminPanel/CreateUser")]
+        [PermissionChecker(3)]
         public IActionResult CreateUser()
         {
             ViewBag.Roles = _permission.GetRoles();
             return View();
         }
+        [PermissionChecker(3)]
         [HttpPost]
         [Route("AdminPanel/CreateUser")]
         public IActionResult CreateUser(List<int> SelectedRoles, CreateUserViewModel createUserViewModel)
@@ -66,12 +71,14 @@ namespace TopLearn.Areas.AdminPanel.Controllers
         #endregion
 
         #region EditUser
+        [PermissionChecker(4)]
         [Route("AdminPanel/EditUser")]
         public IActionResult EditUser(int UserId)
         {
             ViewBag.Roles = _permission.GetRoles();
             return View(_service.GetByUserIdForEditAdmin(UserId));
         }
+        [PermissionChecker(4)]
         [HttpPost]
         [Route("AdminPanel/EditUser")]
         public IActionResult EditUser(List<int> SelectedRoles, EditUserViewModel editUserViewModel)
@@ -102,7 +109,7 @@ namespace TopLearn.Areas.AdminPanel.Controllers
         #endregion
 
         #region Delete User
-
+        [PermissionChecker(5)]
         [Route("AdminPanel/DeleteUser")]
         public IActionResult DeleteUser(int UserId)
         {
@@ -113,6 +120,7 @@ namespace TopLearn.Areas.AdminPanel.Controllers
         }
         [Route("AdminPanel/DeleteUser")]
         [HttpPost]
+        [PermissionChecker(5)]
         public IActionResult DeleteUser(string UserId)
         {
             _service.DeletingUser(int.Parse(UserId));

@@ -27,6 +27,8 @@ namespace TopLearn.Core.Services
         List<Permission> GetAllPermission();
         void AddPermissionToRole(int RoleId, List<int> permission);
         List<int> PermissionsRole(int RoleId);
+        void UpdatePermissionRole(int RoleId, List<int> Permission);
+        bool CheckPermission(int permissionId, string userName);
 
         #endregion
     }

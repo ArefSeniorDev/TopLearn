@@ -5,6 +5,7 @@ using TopLearn.Core.Convertors;
 using TopLearn.Core.Services;
 using TopLearn.Core.Services.Interfaces;
 using TopLearn.DataLayer.Context;
+using TopLearn.DataLayer.Entities.Course;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,7 @@ options.UseSqlServer("Integrated Security=SSPI;Persist Security Info=False;Initi
 builder.Services.AddTransient<IUserInterface, UserService>();
 builder.Services.AddTransient<IViewRenderService, RenderViewToString>();
 builder.Services.AddTransient<IPermissionService, PermissionService>();
+builder.Services.AddTransient<ICourseService, CourseService>();
 #endregion
 
 #region Auth

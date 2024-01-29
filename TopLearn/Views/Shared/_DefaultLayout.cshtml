@@ -52,7 +52,7 @@
     </div>
 
     <!-- main manu -->
-    <partial name="_MainMenu" />
+    @await Component.InvokeAsync("CourseGroupComponent")
     <!-- /main manu -->
     <!-- content -->
     @RenderBody()

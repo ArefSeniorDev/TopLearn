@@ -58,7 +58,7 @@
                                             @foreach (var Sub in permission.Where(x => x.ParentID == item.PermissionId))
                                             {
                                                 <li>
-                                                    <input type="checkbox" name="SelectedPermission" value="@Sub.PermissionId" /> @Sub.PermissionTitle
+                                                    <input type="checkbox" name="SelectedPermission" @((SelectedPermissions.Any(x => x == Sub.PermissionId) ? "checked" : "")) value="@Sub.PermissionId" /> @Sub.PermissionTitle
 
                                                     @if (permission.Any(x => x.ParentID == Sub.ParentID))
                                                     {
@@ -66,7 +66,7 @@
                                                             @foreach (var Sub2 in permission.Where(x => x.ParentID == Sub.PermissionId))
                                                             {
                                                                 <li>
-                                                                    <input type="checkbox" name="SelectedPermission" value="@Sub2.PermissionId" /> @Sub2.PermissionTitle
+                                                                    <input type="checkbox" name="SelectedPermission" @((SelectedPermissions.Any(x => x == Sub2.PermissionId) ? "checked" : "")) value="@Sub2.PermissionId" /> @Sub2.PermissionTitle
                                                                 </li>
                                                             }
 
