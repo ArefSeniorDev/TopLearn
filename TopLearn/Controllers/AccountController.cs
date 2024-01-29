@@ -13,17 +13,20 @@ using TopLearn.Core.Services.Interfaces;
 using TopLearn.DataLayer.Context;
 using TopLearn.DataLayer.Entities.User;
 using TopLearn.Core.DTOs.UserViewModel;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TopLearn.Controllers
 {
     public class AccountController : Controller
     {
         IUserInterface _service;
+        ICourseService _courseservice;
         IViewRenderService _viewrender;
-        public AccountController(IUserInterface service, IViewRenderService viewRender)
+        public AccountController(IUserInterface service, IViewRenderService viewRender, ICourseService courseservice)
         {
             _service = service;
             _viewrender = viewRender;
+            _courseservice = courseservice;
         }
 
 
@@ -210,6 +213,14 @@ namespace TopLearn.Controllers
         {
             return View();
         }
-
+        public IActionResult GetSubGroup(int Id)
+        {
+            List<SelectListItem> list = new List<SelectListItem>()
+            {
+                new SelectListItem(){Text="انتخاب کنید",Value=""}
+            };
+            list.AddRange(_courseservice.GetSubGroupForManageCourse(Id));
+            return Json(new SelectList(list, "Value", "Text"));
+        }
     }
 }
