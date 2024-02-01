@@ -1,0 +1,56 @@
+﻿@using TopLearn.DataLayer.Entities.Course;
+@model CourseEpisode
+@{
+    ViewData["Title"] = "ویرایش";
+}
+
+<div class="row">
+    <form method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="CourseId" />
+        <input type="hidden" asp-for="EpisodeId" />
+        <div class="col-md-12">
+            <h2>اطلاعات دوره</h2>
+            <hr />
+            <div class="form-group">
+                <label>عنوان بخش</label>
+                <input readonly type="text" asp-for="EpisodeTitle" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>زمان بخش</label>
+                <input readonly type="text" asp-for="EpisodeTime" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>فایل بخش</label>
+                <input type="text" readonly asp-for="EpisodeFileName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>دسترسی</label>
+                <div class="checkbox">
+                    <label>
+                        <input type="hidden" asp-for="IsFree">
+                        @if (Model.IsFree)
+                        {
+                            <span class="text-success">
+                                <i class="glyphicon glyphicon-ok"></i>
+                                رایگان است
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">
+                                <i class="glyphicon glyphicon-remove"></i>
+                                پولی است
+                            </span>
+                        }
+
+
+                    </label>
+                </div>
+                <input type="submit" value="حذف" class="btn btn-danger" />
+            </div>
+        </div>
+    </form>
+</div>
+
+
+

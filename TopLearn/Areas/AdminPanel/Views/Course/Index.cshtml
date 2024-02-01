@@ -1,5 +1,5 @@
-﻿@using TopLearn.DataLayer.Entities.Course;
-@model CourseGroup
+﻿@using TopLearn.Core.DTOs.Course;
+@model IEnumerable<ShowCourseForAdminViewModel>
 @{
     ViewData["Title"] = "لیست دوره ها";
 }
@@ -24,6 +24,45 @@
                     <a href="CreateCourse" class="btn btn-outline btn-success">افزودن دوره جدید</a>
 
                 </div>
+
+                <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables-example" aria-describedby="dataTables-example_info">
+                    <thead>
+                        <tr>
+                            <th>تصویر</th>
+                            <th>عنوان دوره</th>
+                            <th>تعداد جلسه</th>
+                            <th>دستورات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="/images/course/image/@item.ImageName" class="thumbnail" style="max-width: 120px" />
+                                </td>
+                                <td>
+                                    @item.Title
+                                </td>
+                                <td>
+                                    @item.EpisodeCount
+                                </td>
+                                <td>
+                                    <a href="/Adminpanel/EditCourse?courseId=@item.CourseId" class="btn btn-warning btn-sm">
+                                        ویرایش
+                                    </a>
+                                    <a href="/Adminpanel/IndexEpisode?courseId=@item.CourseId" class="btn btn-warning btn-sm">
+                                        افزودن قسمت جدید
+                                    </a>
+                                    <a href="/Adminpanel/DeleteCourse?courseId=@item.CourseId" class="btn btn-danger btn-sm">
+                                        حذف
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
             </div>
             <!-- /.panel-body -->
         </div>

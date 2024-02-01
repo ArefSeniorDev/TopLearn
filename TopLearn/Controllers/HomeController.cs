@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using TopLearn.Core.Services.Interfaces;
 using TopLearn.Models;
 
 namespace TopLearn.Controllers
@@ -9,14 +10,16 @@ namespace TopLearn.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private ICourseService _service;
+        public HomeController(ILogger<HomeController> logger, ICourseService service)
         {
             _logger = logger;
+            _service = service;
         }
 
         public IActionResult Index()
         {
-            return View();
+            return View(_service.GetCourse());
         }
         [Authorize]
         public IActionResult Privacy()

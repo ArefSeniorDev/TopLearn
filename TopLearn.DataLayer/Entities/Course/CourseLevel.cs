@@ -7,10 +7,6 @@ namespace TopLearn.DataLayer.Entities.Course
 {
    public class CourseLevel
     {
-        public CourseLevel()
-        {
-            
-        }
         [Key]
         public int LevelId { get; set; }
 

@@ -1,14 +1,18 @@
 ﻿@using TopLearn.DataLayer.Entities.Course;
 @model Course
 @{
-    ViewData["Title"] = "افزودن دوره جدید";
+    ViewData["Title"] = "ویرایش دوره";
 }
 
 <div class="row">
     <form method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="CreateDate"/>
+        <input type="hidden" asp-for="CourseId"/>
+        <input type="hidden" asp-for="CourseImageName"/>
+        <input type="hidden" asp-for="DemoFileName"/>
         <div class="col-md-8">
             <h2>اطلاعات دوره</h2>
-            <hr />
+            <hr/>
             <div class="form-group">
                 <label>عنوان دوره</label>
                 <input type="text" asp-for="CourseTitle" class="form-control">
@@ -36,29 +40,29 @@
             </div>
             <div class="form-group">
                 <label>قیمت دوره</label>
-                <input type="number" asp-for="CoursePrice" value="0" class="form-control" />
-                <span asp-validation-for="CourseDescription"></span>
+                <input type="number" asp-for="CoursePrice" class="form-control"/>
+                <span asp-validation-for="CoursePrice"></span>
             </div>
             <div class="form-group">
                 <label>فایل دمو دوره</label>
-                <input type="file" name="DemoImageCourse" id="DemoImageCourse">
-                <span asp-validation-for="CourseTitle"></span>
+                <input type="file" name="DemoImageCourse">
+                <span asp-validation-for="CourseImageName"></span>
             </div>
             <div class="form-group">
                 <label>کلمات کلیدی دوره</label>
                 <input type="text" asp-for="Tags" class="form-control">
                 <p class="help-block">کلمات را با - جدا کنید</p>
-                <span asp-validation-for="CourseTitle"></span>
+                <span asp-validation-for="Tags"></span>
             </div>
-            <input type="submit" value="ذخیره اطلاعات" class="btn btn-success" />
+            <input type="submit" value="ذخیره اطلاعات" class="btn btn-success"/>
         </div>
         <div class="col-md-4">
             <p></p>
-            <img id="imgCourse" class="thumbnail" src="/images/course/image/no-photo.jpg" />
+            <img id="imgCourse" class="thumbnail" src="/images/course/image/@Model.CourseImageName" />
             <div class="form-group">
 
                 <label>انتخاب تصویر</label>
-                <input type="file" name="ImageCourse" id="imgCourseUp">
+                <input type="file" name="imgCourseUp" id="imgCourseUp">
             </div>
             <div class="form-group">
                 <label>سطح دوره</label>
@@ -73,7 +77,6 @@
         </div>
     </form>
 </div>
-
 @section Scripts
     {
     <script>
@@ -110,3 +113,5 @@
 
     </script>
 }
+
+

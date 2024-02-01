@@ -9,10 +9,6 @@ namespace TopLearn.DataLayer.Entities.Course
 {
     public class Course
     {
-        public Course()
-        {
-
-        }
         [Key]
         public int CourseId { get; set; }
 
@@ -56,6 +52,8 @@ namespace TopLearn.DataLayer.Entities.Course
         public DateTime CreateDate { get; set; }
 
         public DateTime? UpdateDate { get; set; }
+
+        public bool IsDeleted { get; set; }
 
 
         #region Relations

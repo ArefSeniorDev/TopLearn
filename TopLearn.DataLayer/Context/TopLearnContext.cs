@@ -31,6 +31,7 @@ namespace TopLearn.DataLayer.Context
             modelBuilder.Entity<User>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<Role>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<CourseGroup>().HasQueryFilter(x => !x.IsDelete);
+            modelBuilder.Entity<Course>().HasQueryFilter(x => !x.IsDeleted);
 
             //MY Way OF Course Relation
             modelBuilder.Entity<Course>()
@@ -51,12 +52,25 @@ namespace TopLearn.DataLayer.Context
 
                .HasForeignKey(f => f.SubGroup);
 
-            // modelBuilder.Entity<WalletType>()
-            //.HasData
-            //(
-            //  new WalletType() { TypeId = 1, TypeTitle = "برداشت", },
-            //  new WalletType() { TypeId = 1, TypeTitle = "واریز", }
-            //);
+
+           // modelBuilder.Entity<Permission>()
+           //.HasData
+           //(
+           //  new Permission() { ParentID = null, PermissionId = 1, PermissionTitle = "پنل مدریت", },
+           //  new Permission() { ParentID = 1, PermissionId = 2, PermissionTitle = "مدیریت کاربران", },
+           //  new Permission() { ParentID = 2, PermissionId = 3, PermissionTitle = "افزودن کاربران", },
+           //  new Permission() { ParentID = 2, PermissionId = 4, PermissionTitle = "ویرایش کاربر", },
+           //  new Permission() { ParentID = 2, PermissionId = 5, PermissionTitle = "مدیریت نقش ها"},
+           //  new Permission() { ParentID = 2, PermissionId = 6, PermissionTitle = "حذف کاربر", },
+           //  new Permission() { ParentID = 2, PermissionId = 7, PermissionTitle = "حذف کاربر", },
+           //  new Permission() { ParentID = 2, PermissionId = 8, PermissionTitle = "حذف کاربر", },
+           //  new Permission() { ParentID = 2, PermissionId = 9, PermissionTitle = "حذف کاربر", },
+           //  new Permission() { ParentID = 2, PermissionId = 10, PermissionTitle = "حذف کاربر", },
+           //  new Permission() { ParentID = 2, PermissionId = 11, PermissionTitle = "حذف کاربر", },
+           //  new Permission() { ParentID = 2, PermissionId = 12, PermissionTitle = "حذف کاربر", },
+           //  new Permission() { ParentID = 2, PermissionId = 13, PermissionTitle = "حذف کاربر", }
+
+           //);
             // modelBuilder.Entity<User>()
             //.HasData
             //(
