@@ -10,6 +10,7 @@
     <None Include="wwwroot\css\fonts\Material-Design-Iconic-Font.svg" />
     <None Include="wwwroot\css\fonts\Material-Design-Iconic-Font.woff2" />
     <None Include="wwwroot\js\bootstrap.min.js" />
+    <None Include="wwwroot\js\Config.js" />
     <None Include="wwwroot\js\jquery.min.js" />
     <None Include="wwwroot\js\jquery.unobtrusive-ajax.min.js" />
     <None Include="wwwroot\js\jquery.validate.js" />

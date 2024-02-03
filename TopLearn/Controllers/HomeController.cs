@@ -19,7 +19,7 @@ namespace TopLearn.Controllers
 
         public IActionResult Index()
         {
-            return View(_service.GetCourse());
+            return View(_service.GetCourse().Item1);
         }
         [Authorize]
         public IActionResult Privacy()

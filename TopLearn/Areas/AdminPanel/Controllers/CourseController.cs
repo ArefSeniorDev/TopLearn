@@ -51,7 +51,7 @@ namespace TopLearn.Areas.AdminPanel.Controllers
             if (!ModelState.IsValid && ImageCourse == null && DemoImageCourse == null)
                 return View(course);
             _service.AddCourse(course, ImageCourse, DemoImageCourse);
-            return Redirect("Index");
+            return Redirect("Course");
         }
         [PermissionChecker(12)]
         [Route("AdminPanel/EditCourse")]
@@ -81,7 +81,7 @@ namespace TopLearn.Areas.AdminPanel.Controllers
         public IActionResult EditCourse(Course CourseForEdit, IFormFile ImageCourse, IFormFile DemoImageCourse)
         {
             _service.UpdateCourse(CourseForEdit, ImageCourse, DemoImageCourse);
-            return Redirect("Index");
+            return Redirect("Course");
 
         }
         [PermissionChecker(10)]

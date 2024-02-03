@@ -63,7 +63,6 @@ namespace TopLearn.Core.Services
                     courseDemo.CopyTo(stream);
                 }
             }
-
             _context.Courses.Add(course);
             _context.SaveChanges();
 
@@ -106,7 +105,7 @@ namespace TopLearn.Core.Services
             return _context.CourseGroups.ToList();
         }
 
-        public List<ShowCourseListItemViewModel> GetCourse(int pageId = 1, string filter = ""
+        public Tuple<List<ShowCourseListItemViewModel>, int> GetCourse(int pageId = 1, string filter = ""
            , string getType = "all", string orderByType = "date",
            int startPrice = 0, int endPrice = 0, List<int> selectedGroups = null, int take = 0)
         {
@@ -117,7 +116,7 @@ namespace TopLearn.Core.Services
 
             if (!string.IsNullOrEmpty(filter))
             {
-                result = result.Where(c => c.CourseTitle.Contains(filter));
+                result = result.Where(c => c.CourseTitle.Contains(filter) || c.Tags.Contains(filter));
             }
 
             switch (getType)
@@ -164,12 +163,22 @@ namespace TopLearn.Core.Services
 
             if (selectedGroups != null && selectedGroups.Any())
             {
-                //TODo
+                foreach (var item in selectedGroups)
+                {
+                    result = result.Where(x => x.GroupId == item || x.SubGroup == item);
+                }
             }
 
             int skip = (pageId - 1) * take;
-            ;
-            return result.Include(c => c.CourseEpisodes).AsEnumerable().Select(c => new ShowCourseListItemViewModel()
+            int pagecount = result.Include(c => c.CourseEpisodes).AsEnumerable().Select(c => new ShowCourseListItemViewModel()
+            {
+                CourseId = c.CourseId,
+                CourseImageName = c.CourseImageName,
+                Price = c.CoursePrice,
+                Title = c.CourseTitle,
+                TotalTime = new TimeSpan(c.CourseEpisodes.Sum(e => e.EpisodeTime.Ticks))
+            }).Count() / take;
+            var query = result.Include(c => c.CourseEpisodes).AsEnumerable().Select(c => new ShowCourseListItemViewModel()
             {
                 CourseId = c.CourseId,
                 CourseImageName = c.CourseImageName,
@@ -178,12 +187,18 @@ namespace TopLearn.Core.Services
                 TotalTime = new TimeSpan(c.CourseEpisodes.Sum(e => e.EpisodeTime.Ticks))
             }).Skip(skip).Take(take).ToList();
 
-
+            return Tuple.Create(query, pagecount);
         }
 
         public Course GetCourseById(int Id)
         {
             return _context.Courses.SingleOrDefault(x => x.CourseId == Id);
+        }
+
+        public Course GetCourseForShow(int Id)
+        {
+            return _context.Courses.Include(x => x.CourseEpisodes).Include(x => x.CourseStatus)
+                .Include(x => x.CourseLevel).Include(x => x.User).SingleOrDefault(x => x.CourseId == Id);
         }
 
         public List<ShowCourseForAdminViewModel> GetCoursesForAdmin()
