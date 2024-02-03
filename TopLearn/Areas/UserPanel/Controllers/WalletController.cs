@@ -10,8 +10,8 @@ namespace TopLearn.Areas.UserPanel.Controllers
     [Area("UserPanel")]
     public class WalletController : Controller
     {
-        IUserInterface _service;
-        public WalletController(IUserInterface user)
+        IUserService _service;
+        public WalletController(IUserService user)
         {
             _service = user;
         }

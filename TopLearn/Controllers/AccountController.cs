@@ -19,10 +19,10 @@ namespace TopLearn.Controllers
 {
     public class AccountController : Controller
     {
-        IUserInterface _service;
+        IUserService _service;
         ICourseService _courseservice;
         IViewRenderService _viewrender;
-        public AccountController(IUserInterface service, IViewRenderService viewRender, ICourseService courseservice)
+        public AccountController(IUserService service, IViewRenderService viewRender, ICourseService courseservice)
         {
             _service = service;
             _viewrender = viewRender;
@@ -86,7 +86,7 @@ namespace TopLearn.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public IActionResult Login(LoginViewModel loginViewModel)
+        public IActionResult Login(LoginViewModel loginViewModel, string ReturnUrl = "/")
         {
 
             //if (!ModelState.IsValid)
@@ -117,6 +117,7 @@ namespace TopLearn.Controllers
 
                     HttpContext.SignInAsync(principal, properties);
                     ViewBag.IsSuccess = user.Email;
+
                 }
                 else
                 {
@@ -129,7 +130,10 @@ namespace TopLearn.Controllers
                 return View(loginViewModel);
             }
 
-
+            if (ReturnUrl != "/")
+            {
+                return Redirect(ReturnUrl);
+            }
             return View();
         }
         #endregion

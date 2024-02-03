@@ -13,9 +13,9 @@ namespace TopLearn.Areas.AdminPanel.Controllers
     [Area("AdminPanel")]
     public class HomeController : Controller
     {
-        IUserInterface _service;
+        IUserService _service;
         IPermissionService _permission;
-        public HomeController(IUserInterface userInterface, IPermissionService permissionService)
+        public HomeController(IUserService userInterface, IPermissionService permissionService)
         {
             _service = userInterface;
             _permission = permissionService;

@@ -59,19 +59,22 @@ namespace TopLearn.DataLayer.Entities.Course
         #region Relations
 
         [ForeignKey("TeacherId")]
-        public User.User User { get; set; }
+        public virtual User.User User { get; set; }
 
         //[ForeignKey("GroupId")]
-        public CourseGroup CourseGroup { get; set; }
+        public virtual CourseGroup CourseGroup { get; set; }
 
         //[ForeignKey("SubGroup")]
-        public CourseGroup Group { get; set; }
+        public virtual CourseGroup Group { get; set; }
 
-        public CourseStatus CourseStatus { get; set; }
+        public virtual CourseStatus CourseStatus { get; set; }
 
-        public CourseLevel CourseLevel { get; set; }
+        public virtual CourseLevel CourseLevel { get; set; }
 
-        public List<CourseEpisode> CourseEpisodes { get; set; }
+        public virtual List<CourseEpisode> CourseEpisodes { get; set; }
+        public virtual List<Order.OrderDetail> OrderDetail { get; set; }
+        public virtual List<UserCourse> UserCourses { get; set; }
+
         #endregion
     }
 }

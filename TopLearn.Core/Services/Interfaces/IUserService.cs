@@ -9,7 +9,7 @@ using TopLearn.DataLayer.Entities.Wallet;
 
 namespace TopLearn.Core.Services.Interfaces
 {
-    public interface IUserInterface
+    public interface IUserService
     {
         public bool IsEmailExist(string Email);
         public bool IsExistUserName(string userName);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using TopLearn.DataLayer.Entities.Course;
+using TopLearn.DataLayer.Entities.Order;
 using TopLearn.DataLayer.Entities.Permissions;
 using TopLearn.DataLayer.Entities.User;
 using TopLearn.DataLayer.Entities.Wallet;
@@ -33,6 +34,13 @@ namespace TopLearn.DataLayer.Context
             modelBuilder.Entity<CourseGroup>().HasQueryFilter(x => !x.IsDelete);
             modelBuilder.Entity<Course>().HasQueryFilter(x => !x.IsDeleted);
 
+            var cascadeFKs = modelBuilder.Model.GetEntityTypes()
+                .SelectMany(t => t.GetForeignKeys())
+                .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
+
+            foreach (var fk in cascadeFKs)
+                fk.DeleteBehavior = DeleteBehavior.Restrict;
+
             //MY Way OF Course Relation
             modelBuilder.Entity<Course>()
 
@@ -53,24 +61,24 @@ namespace TopLearn.DataLayer.Context
                .HasForeignKey(f => f.SubGroup);
 
 
-           // modelBuilder.Entity<Permission>()
-           //.HasData
-           //(
-           //  new Permission() { ParentID = null, PermissionId = 1, PermissionTitle = "پنل مدریت", },
-           //  new Permission() { ParentID = 1, PermissionId = 2, PermissionTitle = "مدیریت کاربران", },
-           //  new Permission() { ParentID = 2, PermissionId = 3, PermissionTitle = "افزودن کاربران", },
-           //  new Permission() { ParentID = 2, PermissionId = 4, PermissionTitle = "ویرایش کاربر", },
-           //  new Permission() { ParentID = 2, PermissionId = 5, PermissionTitle = "مدیریت نقش ها"},
-           //  new Permission() { ParentID = 2, PermissionId = 6, PermissionTitle = "حذف کاربر", },
-           //  new Permission() { ParentID = 2, PermissionId = 7, PermissionTitle = "حذف کاربر", },
-           //  new Permission() { ParentID = 2, PermissionId = 8, PermissionTitle = "حذف کاربر", },
-           //  new Permission() { ParentID = 2, PermissionId = 9, PermissionTitle = "حذف کاربر", },
-           //  new Permission() { ParentID = 2, PermissionId = 10, PermissionTitle = "حذف کاربر", },
-           //  new Permission() { ParentID = 2, PermissionId = 11, PermissionTitle = "حذف کاربر", },
-           //  new Permission() { ParentID = 2, PermissionId = 12, PermissionTitle = "حذف کاربر", },
-           //  new Permission() { ParentID = 2, PermissionId = 13, PermissionTitle = "حذف کاربر", }
+            // modelBuilder.Entity<Permission>()
+            //.HasData
+            //(
+            //  new Permission() { ParentID = null, PermissionId = 1, PermissionTitle = "پنل مدریت", },
+            //  new Permission() { ParentID = 1, PermissionId = 2, PermissionTitle = "مدیریت کاربران", },
+            //  new Permission() { ParentID = 2, PermissionId = 3, PermissionTitle = "افزودن کاربران", },
+            //  new Permission() { ParentID = 2, PermissionId = 4, PermissionTitle = "ویرایش کاربر", },
+            //  new Permission() { ParentID = 2, PermissionId = 5, PermissionTitle = "مدیریت نقش ها"},
+            //  new Permission() { ParentID = 2, PermissionId = 6, PermissionTitle = "حذف کاربر", },
+            //  new Permission() { ParentID = 2, PermissionId = 7, PermissionTitle = "حذف کاربر", },
+            //  new Permission() { ParentID = 2, PermissionId = 8, PermissionTitle = "حذف کاربر", },
+            //  new Permission() { ParentID = 2, PermissionId = 9, PermissionTitle = "حذف کاربر", },
+            //  new Permission() { ParentID = 2, PermissionId = 10, PermissionTitle = "حذف کاربر", },
+            //  new Permission() { ParentID = 2, PermissionId = 11, PermissionTitle = "حذف کاربر", },
+            //  new Permission() { ParentID = 2, PermissionId = 12, PermissionTitle = "حذف کاربر", },
+            //  new Permission() { ParentID = 2, PermissionId = 13, PermissionTitle = "حذف کاربر", }
 
-           //);
+            //);
             // modelBuilder.Entity<User>()
             //.HasData
             //(
@@ -96,10 +104,15 @@ namespace TopLearn.DataLayer.Context
         public DbSet<CourseStatus> CourseStatuses { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseEpisode> CourseEpisodes { get; set; }
+        public DbSet<UserCourse> UserCourses { get; set; }
 
         #endregion
 
+        #region Order
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
 
+        #endregion
 
         #region Wallet
         public DbSet<Wallet> Wallet { get; set; }

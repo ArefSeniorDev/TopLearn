@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TopLearn.Core.Services.Interfaces;
 
 namespace TopLearn.Controllers
@@ -6,9 +7,12 @@ namespace TopLearn.Controllers
     public class ShowCourseController : Controller
     {
         ICourseService _service;
-        public ShowCourseController(ICourseService courseService)
+        IOrderService _orderService;
+        public ShowCourseController(ICourseService courseService, IOrderService orderService)
         {
             _service = courseService;
+            _orderService = orderService;
+
         }
         public IActionResult Index(int pageId = 1, string filter = "", string getType = "all",
             string orderByType = "date", int startPrice = 0, int endPrice = 0, List<int> selectedGroups = null)
@@ -28,6 +32,14 @@ namespace TopLearn.Controllers
                 return NotFound();
             }
             return View(Sincourse);
+        }
+        [Route("BuyCourse/{Id}")]
+        [Authorize]
+        public IActionResult BuyCourse(int Id)
+        {
+            int Order = _orderService.AddOrder(User.Identity.Name,Id);
+            return Redirect("/UserPanel/MyOrder/ShowOrder/" + Order);
+
         }
     }
 }

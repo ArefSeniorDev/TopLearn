@@ -11,8 +11,8 @@ namespace TopLearn.Areas.UserPanel.Controllers
     [Area("UserPanel")]
     public class HomeController : Controller
     {
-        IUserInterface _service;
-        public HomeController(IUserInterface user)
+        IUserService _service;
+        public HomeController(IUserService user)
         {
             _service = user;
         }

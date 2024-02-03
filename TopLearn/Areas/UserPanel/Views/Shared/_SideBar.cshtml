@@ -1,7 +1,7 @@
 ﻿@using TopLearn.Core.Convertors;
 @using TopLearn.Core.DTOs.UserViewModel;
 @using TopLearn.Core.Services.Interfaces;
-@inject IUserInterface _UserInterface
+@inject IUserService _UserInterface
 @{
     SideBarUserPanelViewModel user = _UserInterface.GetSidebarUserPanel(User.Identity.Name);
 }

@@ -14,7 +14,7 @@ using TopLearn.DataLayer.Entities.Wallet;
 
 namespace TopLearn.Core.Services
 {
-    public class UserService : IUserInterface
+    public class UserService : IUserService
     {
         TopLearnContext _context;
         public UserService(TopLearnContext context)
@@ -336,19 +336,19 @@ namespace TopLearn.Core.Services
             return user.UserId;
         }
 
-        bool IUserInterface.IsEmailExist(string Email)
+        bool IUserService.IsEmailExist(string Email)
         {
             return _context.Users.Any(x => x.Email == Email);
         }
 
-        User IUserInterface.LoginUser(LoginViewModel user)
+        User IUserService.LoginUser(LoginViewModel user)
         {
             string hashPassword = PasswordHelper.EncodePasswordMd5(user.Password);
             string email = TextFixer.TextFixed(user.Email);
             return _context.Users.SingleOrDefault(y => y.Email == email && y.Password == hashPassword);
         }
 
-        int IUserInterface.UpdateUserFromAdmin(EditUserViewModel EditUser)
+        int IUserService.UpdateUserFromAdmin(EditUserViewModel EditUser)
         {
             string pass = "";
             var user = GetByUserByUserIdEditAdmin(EditUser.UserId);

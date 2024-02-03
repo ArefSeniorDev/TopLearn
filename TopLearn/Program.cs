@@ -24,10 +24,11 @@ options.UseSqlServer("Integrated Security=SSPI;Persist Security Info=False;Initi
 #endregion
 
 #region IOC
-builder.Services.AddTransient<IUserInterface, UserService>();
+builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IViewRenderService, RenderViewToString>();
 builder.Services.AddTransient<IPermissionService, PermissionService>();
 builder.Services.AddTransient<ICourseService, CourseService>();
+builder.Services.AddTransient<IOrderService, OrderService>();
 #endregion
 
 #region Auth
