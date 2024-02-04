@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Scripting;
+using TopLearn.Core.DTOs.Enum;
 using TopLearn.Core.Services.Interfaces;
 using TopLearn.DataLayer.Migrations;
 
@@ -18,9 +20,9 @@ namespace TopLearn.Areas.UserPanel.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            return View(_orderService.GetUserOrders(User.Identity.Name));
         }
-        public IActionResult ShowOrder(int Id, bool finaly = false)
+        public IActionResult ShowOrder(int Id, bool finaly = false, string type = "")
         {
             ViewBag.WalletBallance = _userService.BalanceUserWallet(User.Identity.Name);
             var order = _orderService.GetOrderForUserPanel(User.Identity.Name, Id);
@@ -28,6 +30,7 @@ namespace TopLearn.Areas.UserPanel.Controllers
             {
                 return NotFound();
             }
+            ViewBag.DiscountType = type;
             ViewBag.finaly = finaly;
             ViewBag.IsArchive = null;
             if (finaly)
@@ -40,9 +43,14 @@ namespace TopLearn.Areas.UserPanel.Controllers
         {
             if (_orderService.FinallyOrder(User.Identity.Name, Id))
             {
-                return Redirect("/UserPanel/ShowOrder/" + Id + "?finaly=true");
+                return Redirect("/UserPanel/MyOrder/ShowOrder/" + Id + "?finaly=true");
             }
             return BadRequest();
+        }
+        public IActionResult UseDiscount(int orderId, string code)
+        {
+            DiscountUseType Type = _orderService.UseDiscount(orderId, code);
+            return Redirect("/UserPanel/MyOrder/ShowOrder/" + orderId + "?type=" + Type.ToString());
         }
     }
 }

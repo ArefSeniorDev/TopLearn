@@ -310,7 +310,7 @@ namespace TopLearn.Core.Services
         public List<WalletViewModel> GetUserWallet(string username)
         {
             int UserId = GetUserIdByUserName(username);
-            return _context.Wallet.Where(x => x.IsPay == true && UserId == UserId).Select(x => new WalletViewModel()
+            return _context.Wallet.Where(x => x.IsPay == true && x.UserId == UserId).Select(x => new WalletViewModel()
             {
                 Amount = x.Amount,
                 DateTime = x.CreateDate,

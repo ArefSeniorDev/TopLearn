@@ -5,7 +5,8 @@
 
 @{
     ViewData["Title"] = "ShowOrder";
-    int sumOrder = Model.OrderDetails.Sum(od => od.Price * od.Count);
+    int sumOrder = Model.OrderSum;
+    string DiscountType = ViewBag.DiscountType.ToString();
 }
 
 <div class="container">
@@ -71,9 +72,48 @@
                                     <tr>
                                         <td colspan="3" class="text-left">کد تخفیف</td>
                                         <td>
-                                            <input type="text" class="form-control" />
-                                            <input type="submit" class="btn btn-primary btn-block" style="margin-top: 5px" value="اعمال" />
+                                            <form action="/UserPanel/MyOrder/UseDiscount" method="post">
+                                                <input type="hidden" name="orderid" value="@Model.OrderId" />
+                                                <input type="text" name="code" class="form-control" />
+                                                <input type="submit" class="btn btn-primary btn-block" style="margin-top: 5px" value="اعمال" />
+                                            </form>
                                         </td>
+                                        @if (DiscountType != "")
+                                        {
+                                            switch (DiscountType)
+                                            {
+                                                case "ExpireDate":
+                                                    <div class="alert alert-danger">
+                                                        <p class="texttext-muted">کد منقضی شده است</p>
+                                                    </div>
+                                                    break;
+                                                case "Finished":
+                                                    <div class="alert alert-danger">
+                                                        <p class="texttext-muted">کد به اتمام رسیده است</p>
+                                                    </div>
+                                                    break;
+                                                case "NotFound":
+                                                    <div class="alert alert-danger">
+                                                        <p class="texttext-muted">کد وارد شده معتبر نیست</p>
+                                                    </div>
+                                                    break;
+                                                case "Success":
+                                                    <div class="alert alert-success">
+                                                        <p class="texttext-muted">کد با موفقیت اعمال شد</p>
+                                                    </div>
+                                                    break;
+                                                case "Used":
+                                                    <div class="alert alert-info">
+                                                        <p class="texttext-muted">این کد توسط شما استفاده شده است</p>
+                                                    </div>
+                                                    break;
+                                                case "UsedTwice":
+                                                    <div class="alert alert-info">
+                                                        <p class="texttext-muted">بیشتر از یک کد تخفیف نمیشود اعمال شود</p>
+                                                    </div>
+                                                    break;
+                                            }
+                                        }
                                     </tr>
                                 }
                                 <tr>
@@ -83,8 +123,9 @@
                                         <hr />
                                         @if (ViewBag.IsArchive == null)
                                         {
-                                            <p >موجودی کیف پول شما:
-                                            @ViewBag.WalletBallance.ToString("#,0")
+                                            <p>
+                                                موجودی کیف پول شما:
+                                                @ViewBag.WalletBallance.ToString("#,0")
                                             </p>
                                         }
 

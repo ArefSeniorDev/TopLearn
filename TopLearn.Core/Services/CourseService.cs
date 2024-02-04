@@ -28,6 +28,11 @@ namespace TopLearn.Core.Services
             _context = topLearnContext;
         }
 
+        public void AddComment(CourseComment courseComment)
+        {
+            _context.CourseComments.Add(courseComment);
+            _context.SaveChanges();
+        }
 
         public int AddCourse(Course course, IFormFile imgCourse, IFormFile courseDemo)
         {
@@ -89,6 +94,22 @@ namespace TopLearn.Core.Services
         {
             string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/course_ep", FileName);
             return File.Exists(path);
+        }
+
+        public Tuple<List<CourseComment>, int> CourseComment(int courseId, int pageId = 1)
+        {
+            int take = 5;
+            int skip = (pageId - 1) * take;
+            int pageCount = _context.CourseComments.Where(c => !c.IsDelete && c.CourseId == courseId).Count() / take;
+
+            if ((pageCount % 2) != 0)
+            {
+                pageCount += 1;
+            }
+
+            return Tuple.Create(
+                _context.CourseComments.Include(c => c.User).Where(c => !c.IsDelete && c.CourseId == courseId).Skip(skip).Take(take)
+                    .OrderByDescending(c => c.CreateDate).ToList(), pageCount);
         }
 
         public void DeleteEpisode(CourseEpisode episode)
@@ -198,7 +219,7 @@ namespace TopLearn.Core.Services
         public Course GetCourseForShow(int Id)
         {
             return _context.Courses.Include(x => x.CourseEpisodes).Include(x => x.CourseStatus)
-                .Include(x => x.CourseLevel).Include(x => x.User).SingleOrDefault(x => x.CourseId == Id);
+                .Include(x => x.CourseLevel).Include(x => x.User).Include(x => x.UserCourses).SingleOrDefault(x => x.CourseId == Id);
         }
 
         public List<ShowCourseForAdminViewModel> GetCoursesForAdmin()

@@ -17,6 +17,8 @@ namespace TopLearn.DataLayer.Entities.Order
         [Required]
         public DateTime CreateDate { get; set; }
 
+        public bool UsedDisCount { get; set; }
+
 
         public virtual User.User User { get; set; }
         public virtual List<OrderDetail> OrderDetails { get; set; }

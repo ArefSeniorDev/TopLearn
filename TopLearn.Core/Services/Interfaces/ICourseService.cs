@@ -32,10 +32,10 @@ namespace TopLearn.Core.Services.Interfaces
 
 
 
-        Tuple<List<ShowCourseListItemViewModel>,int> GetCourse(int pageId = 1, string filter = "", string getType = "all",
+        Tuple<List<ShowCourseListItemViewModel>, int> GetCourse(int pageId = 1, string filter = "", string getType = "all",
             string orderByType = "date", int startPrice = 0, int endPrice = 0, List<int> selectedGroups = null, int take = 0);
 
-        Course GetCourseForShow(int Id); 
+        Course GetCourseForShow(int Id);
         #endregion
 
 
@@ -47,6 +47,13 @@ namespace TopLearn.Core.Services.Interfaces
         void UpdateEpisode(CourseEpisode episode, IFormFile file);
         void DeleteEpisode(CourseEpisode episode);
         bool ChechExistFile(string FileName);
+
+        #endregion
+
+        #region Comments
+
+        void AddComment(CourseComment courseComment);
+        Tuple<List<CourseComment>, int> CourseComment(int courseId, int pageId = 1);
 
         #endregion
     }
