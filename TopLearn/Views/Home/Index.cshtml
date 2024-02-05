@@ -43,6 +43,16 @@
                 <a href=""> مشاهده همه دوره ها </a>
             </header>
             <div class="row">
+                @{
+                    IEnumerable<ShowCourseListItemViewModel> popular = ViewBag.PupolarCourse as IEnumerable<ShowCourseListItemViewModel>;
+                }
+                @if (popular != null)
+                {
+@*                     foreach (var item in popular.ToList())
+                    {
+                        <partial name="_BoxCourse" model="item" />
+                    } *@
+                }
             </div>
         </section>
     </div>

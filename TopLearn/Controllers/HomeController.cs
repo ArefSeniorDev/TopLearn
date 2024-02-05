@@ -19,7 +19,10 @@ namespace TopLearn.Controllers
 
         public IActionResult Index()
         {
+            var popular = _service.GetPopularCourses();
+            ViewBag.PupolarCourse = popular;
             return View(_service.GetCourse().Item1);
+
         }
         [Authorize]
         public IActionResult Privacy()

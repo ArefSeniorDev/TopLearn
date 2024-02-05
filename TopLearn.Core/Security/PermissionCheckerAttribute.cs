@@ -27,7 +27,7 @@ namespace TopLearn.Core.Security
                 string UserName = context.HttpContext.User.Identity.Name;
                 if (!_permission.CheckPermission(_permissionId, UserName))
                 {
-                    context.Result = new RedirectResult("/AccessDenied");
+                    context.Result = new RedirectResult("/AccessDenied?" + context.HttpContext.Request.Path);
                 }
             }
             else

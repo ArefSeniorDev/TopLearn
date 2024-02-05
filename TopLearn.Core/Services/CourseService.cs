@@ -90,6 +90,12 @@ namespace TopLearn.Core.Services
             return episode.EpisodeId;
         }
 
+        public void AddGroupe(CourseGroup courseGroup)
+        {
+            _context.CourseGroups.Add(courseGroup);
+            _context.SaveChanges();
+        }
+
         public bool ChechExistFile(string FileName)
         {
             string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/course_ep", FileName);
@@ -123,7 +129,12 @@ namespace TopLearn.Core.Services
 
         public List<CourseGroup> GetAllGroup()
         {
-            return _context.CourseGroups.ToList();
+            return _context.CourseGroups.Include(x => x.CourseGroups).ToList();
+        }
+
+        public CourseGroup GetByCourseGroupId(int id)
+        {
+            return _context.CourseGroups.SingleOrDefault(x => x.GroupId == id);
         }
 
         public Tuple<List<ShowCourseListItemViewModel>, int> GetCourse(int pageId = 1, string filter = ""
@@ -261,6 +272,23 @@ namespace TopLearn.Core.Services
             }).ToList();
         }
 
+        public IEnumerable<ShowCourseListItemViewModel> GetPopularCourses()
+        {
+            return _context.Courses.Include(c => c.OrderDetail)
+                .Where(c => c.OrderDetail.Any())
+                .OrderByDescending(d => d.OrderDetail.Count())
+                .Take(8)
+                .Select(c => new ShowCourseListItemViewModel()
+                {
+                    CourseId = c.CourseId,
+                    CourseImageName = c.CourseImageName,
+                    Price = c.CoursePrice,
+                    Title = c.CourseTitle,
+                    TotalTime = new TimeSpan(c.CourseEpisodes.Sum(e => e.EpisodeTime.Ticks))
+                });
+
+        }
+
         public List<SelectListItem> GetStatus()
         {
             return _context.CourseStatuses.Select(x => new SelectListItem()
@@ -365,6 +393,12 @@ namespace TopLearn.Core.Services
             }
 
             _context.CourseEpisodes.Update(episode);
+            _context.SaveChanges();
+        }
+
+        public void UpdateGroupe(CourseGroup courseGroup)
+        {
+            _context.CourseGroups.Update(courseGroup);
             _context.SaveChanges();
         }
     }

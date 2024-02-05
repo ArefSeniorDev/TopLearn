@@ -61,8 +61,18 @@ namespace TopLearn.Areas.AdminPanel.Controllers
             var Groups = _service.GetGroupForManageCourse();
             ViewBag.GroupCourse = new SelectList(Groups, "Value", "Text", CourseForEdit.GroupId);
 
-            var SubGroups = _service.GetSubGroupForManageCourse(int.Parse(Groups.FirstOrDefault().Value));
-            ViewBag.SubGroupCourse = new SelectList(SubGroups, "Value", "Text", CourseForEdit.SubGroup ?? 0);
+            List<SelectListItem> subgroup = new List<SelectListItem>()
+            {
+                 new SelectListItem(){Text="انتخاب کنید",Value=""}
+            };
+
+            subgroup.AddRange(_service.GetSubGroupForManageCourse(CourseForEdit.GroupId));
+            string SelecedSubGroupe = null;
+            if (CourseForEdit.SubGroup != null)
+            {
+                SelecedSubGroupe = CourseForEdit.SubGroup.ToString();
+            }
+            ViewBag.SubGroupCourse = new SelectList(subgroup, "Value", "Text", SelecedSubGroupe);
 
             var Teachers = _service.GetTeacher();
             ViewBag.Teachers = new SelectList(Teachers, "Value", "Text", CourseForEdit.TeacherId);
