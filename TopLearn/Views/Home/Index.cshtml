@@ -44,7 +44,7 @@
             </header>
             <div class="row">
                 @{
-                    IEnumerable<ShowCourseListItemViewModel> popular = ViewBag.PupolarCourse as IEnumerable<ShowCourseListItemViewModel>;
+                    List<ShowCourseListItemViewModel> popular = ViewBag.PupolarCourse as List<ShowCourseListItemViewModel>;
                 }
                 @if (popular != null)
                 {

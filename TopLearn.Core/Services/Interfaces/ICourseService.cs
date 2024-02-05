@@ -42,7 +42,7 @@ namespace TopLearn.Core.Services.Interfaces
 
         Course GetCourseForShow(int Id);
 
-        IEnumerable<ShowCourseListItemViewModel> GetPopularCourses();
+        List<ShowCourseListItemViewModel> GetPopularCourses();
 
         #endregion
 

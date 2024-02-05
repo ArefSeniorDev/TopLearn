@@ -68,6 +68,9 @@ namespace TopLearn.Core.Services
                     courseDemo.CopyTo(stream);
                 }
             }
+            course.CourseDescription = course.CourseDescription == null ? "" : course.CourseDescription;
+
+
             _context.Courses.Add(course);
             _context.SaveChanges();
 
@@ -272,11 +275,11 @@ namespace TopLearn.Core.Services
             }).ToList();
         }
 
-        public IEnumerable<ShowCourseListItemViewModel> GetPopularCourses()
+        public List<ShowCourseListItemViewModel> GetPopularCourses()
         {
             return _context.Courses.Include(c => c.OrderDetail)
                 .Where(c => c.OrderDetail.Any())
-                .OrderByDescending(d => d.OrderDetail.Count())
+                .OrderByDescending(d => d.OrderDetail.Count)
                 .Take(8)
                 .Select(c => new ShowCourseListItemViewModel()
                 {
@@ -285,7 +288,7 @@ namespace TopLearn.Core.Services
                     Price = c.CoursePrice,
                     Title = c.CourseTitle,
                     TotalTime = new TimeSpan(c.CourseEpisodes.Sum(e => e.EpisodeTime.Ticks))
-                });
+                }).ToList();
 
         }
 

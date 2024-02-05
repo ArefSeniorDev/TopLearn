@@ -28,6 +28,39 @@ namespace TopLearn.DataLayer.Context
 
         #endregion
 
+        #region Permission
+
+        public DbSet<Permission> Permission { get; set; }
+
+        public DbSet<RolePermission> RolePermission { get; set; }
+
+        #endregion
+
+
+        #region Course
+
+        public DbSet<CourseGroup> CourseGroups { get; set; }
+        public DbSet<CourseLevel> CourseLevels { get; set; }
+        public DbSet<CourseStatus> CourseStatuses { get; set; }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<CourseEpisode> CourseEpisodes { get; set; }
+        public DbSet<UserCourse> UserCourses { get; set; }
+        public DbSet<CourseComment> CourseComments { get; set; }
+
+        #endregion
+
+        #region Order
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<Discount> Discounts { get; set; }
+
+        #endregion
+
+        #region Wallet
+        public DbSet<Wallet> Wallet { get; set; }
+
+        #endregion
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().HasQueryFilter(x => !x.IsDeleted);
@@ -61,7 +94,25 @@ namespace TopLearn.DataLayer.Context
 
                .HasForeignKey(f => f.SubGroup);
 
+            modelBuilder.Entity<Course>()
+               .HasOne<CourseLevel>(f => f.CourseLevel)
+               .WithMany(g => g.Courses)
+               .HasForeignKey(f => f.LevelId);
 
+            modelBuilder.Entity<Course>()
+              .HasOne<CourseStatus>(f => f.CourseStatus)
+              .WithMany(g => g.Courses)
+              .HasForeignKey(f => f.StatusId);
+
+            modelBuilder.Entity<OrderDetail>()
+              .HasOne<Course>(f => f.Course)
+              .WithMany(g => g.OrderDetail)
+              .HasForeignKey(f => f.OrderId);
+
+            modelBuilder.Entity<OrderDetail>()
+               .HasOne<Order>(f => f.Order)
+               .WithMany(g => g.OrderDetails)
+               .HasForeignKey(f => f.OrderId);
             // modelBuilder.Entity<Permission>()
             //.HasData
             //(
@@ -89,37 +140,6 @@ namespace TopLearn.DataLayer.Context
         }
 
 
-        #region Permission
 
-        public DbSet<Permission> Permission { get; set; }
-
-        public DbSet<RolePermission> RolePermission { get; set; }
-
-        #endregion
-
-
-        #region Course
-
-        public DbSet<CourseGroup> CourseGroups { get; set; }
-        public DbSet<CourseLevel> CourseLevels { get; set; }
-        public DbSet<CourseStatus> CourseStatuses { get; set; }
-        public DbSet<Course> Courses { get; set; }
-        public DbSet<CourseEpisode> CourseEpisodes { get; set; }
-        public DbSet<UserCourse> UserCourses { get; set; }
-        public DbSet<CourseComment> CourseComments { get; set; }
-
-        #endregion
-
-        #region Order
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderDetail> OrderDetails { get; set; }
-        public DbSet<Discount> Discounts { get; set; }
-
-        #endregion
-
-        #region Wallet
-        public DbSet<Wallet> Wallet { get; set; }
-
-        #endregion
     }
 }
