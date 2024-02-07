@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SharpCompress.Archives;
 using TopLearn.Core.Services.Interfaces;
 using TopLearn.DataLayer.Entities.Course;
 
@@ -26,12 +27,73 @@ namespace TopLearn.Controllers
 
         }
         [Route("ShowCourse/{Id}")]
-        public IActionResult ShowCourse(int Id)
+        public IActionResult ShowCourse(int Id, int episode = 0)
         {
             var Sincourse = _service.GetCourseForShow(Id);
             if (Sincourse == null)
             {
                 return NotFound();
+            }
+            if (episode != 0 && User.Identity.IsAuthenticated)
+            {
+                if (Sincourse.CourseEpisodes.All(e => e.EpisodeId != episode))
+                {
+                    return NotFound();
+                }
+
+                if (!Sincourse.CourseEpisodes.First(e => e.EpisodeId == episode).IsFree)
+                {
+                    if (!_orderService.IsUserInCourse(User.Identity.Name, Id))
+                    {
+                        return NotFound();
+                    }
+                }
+
+                var ep = Sincourse.CourseEpisodes.First(e => e.EpisodeId == episode);
+                ViewBag.Episode = ep;
+                string filePath = "";
+                string checkFilePath = "";
+                if (ep.IsFree)
+                {
+                    filePath = "/CourseOnline/" + ep.EpisodeFileName.Replace(".rar", ".mp4");
+                    checkFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/CourseOnline",
+                        ep.EpisodeFileName.Replace(".rar", ".mp4"));
+                }
+                else
+                {
+                    filePath = "/CourseFilesOnline/" + ep.EpisodeFileName.Replace(".rar", ".mp4");
+                    checkFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/CourseFilesOnline",
+                        ep.EpisodeFileName.Replace(".rar", ".mp4"));
+                }
+
+
+                if (!System.IO.File.Exists(checkFilePath))
+                {
+                    string targetPath = Directory.GetCurrentDirectory();
+                    if (ep.IsFree)
+                    {
+                        targetPath = System.IO.Path.Combine(targetPath, "wwwroot/CourseOnline");
+                    }
+                    else
+                    {
+                        targetPath = System.IO.Path.Combine(targetPath, "wwwroot/CourseFilesOnline");
+                    }
+
+                    string rarPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/course_ep",
+                        ep.EpisodeFileName);
+                    var archive = ArchiveFactory.Open(rarPath);
+
+                    var Entries = archive.Entries.OrderBy(x => x.Key.Length);
+                    foreach (var en in Entries)
+                    {
+                        if (Path.GetExtension(en.Key) == ".mp4")
+                        {
+                            en.WriteTo(System.IO.File.Create(Path.Combine(targetPath, ep.EpisodeFileName.Replace(".rar", ".mp4"))));
+                        }
+                    }
+                }
+
+                ViewBag.filePath = filePath;
             }
             return View(Sincourse);
         }
@@ -85,6 +147,17 @@ namespace TopLearn.Controllers
         {
             return View(_service.CourseComment(Id, pageId));
         }
+        public IActionResult VoteCourse(int Id)
+        {
+            return PartialView(_service.GetCourseVote(Id));
+        }
+        [Authorize]
+        public IActionResult AddVote(int Id, bool vote)
+        {
+            int UserId = _userService.GetUserIdByUserName(User.Identity.Name);
+            _service.AddVote(Id, UserId, vote);
+            return PartialView("VoteCourse", _service.GetCourseVote(Id));
 
+        }
     }
 }

@@ -35,6 +35,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+    <PackageReference Include="SharpCompress" Version="0.36.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,9 +48,10 @@
     <Folder Include="Areas\AdminPanel\Models\" />
     <Folder Include="Areas\UserPanel\Data\" />
     <Folder Include="Areas\UserPanel\Models\" />
-    <Folder Include="wwwroot\images\course\demos\" />
+    <Folder Include="wwwroot\CourseFilesOnline\" />
     <Folder Include="wwwroot\MyImages\" />
     <Folder Include="wwwroot\course_ep\" />
+    <Folder Include="wwwroot\CourseOnline\" />
   </ItemGroup>
 
 </Project>

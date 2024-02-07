@@ -64,5 +64,10 @@ namespace TopLearn.Core.Services.Interfaces
         Tuple<List<CourseComment>, int> CourseComment(int courseId, int pageId = 1);
 
         #endregion
+
+        #region CourseVote
+        void AddVote(int courseId, int userId, bool vote);
+        Tuple<int,int> GetCourseVote(int courseId);
+        #endregion
     }
 }

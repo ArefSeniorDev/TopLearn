@@ -99,6 +99,25 @@ namespace TopLearn.Core.Services
             _context.SaveChanges();
         }
 
+        public void AddVote(int courseId, int userId, bool vote)
+        {
+            var votes = _context.CourseVotes.SingleOrDefault(x => x.UserId == userId && x.CourseId == courseId);
+            if (votes == null)
+            {
+                _context.CourseVotes.Add(new CourseVote()
+                {
+                    CourseId = courseId,
+                    UserId = userId,
+                    Vote = vote,
+                });
+            }
+            else
+            {
+                votes.Vote = vote;
+            }
+            _context.SaveChanges();
+        }
+
         public bool ChechExistFile(string FileName)
         {
             string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/course_ep", FileName);
@@ -245,6 +264,12 @@ namespace TopLearn.Core.Services
                 ImageName = x.CourseImageName,
                 Title = x.CourseTitle,
             }).ToList();
+        }
+
+        public Tuple<int, int> GetCourseVote(int courseId)
+        {
+            var vote = _context.CourseVotes.Where(x => x.CourseId == courseId).Select(x => x.Vote).ToList();
+            return Tuple.Create(vote.Count(), vote.Count(x => !x));
         }
 
         public List<CourseEpisode> GetEpisodes(int courseId)

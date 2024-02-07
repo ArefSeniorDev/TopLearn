@@ -1,5 +1,4 @@
 ﻿@using TopLearn.Core.DTOs.CourseViewModel;
-@model IEnumerable<ShowCourseListItemViewModel>
 @{
     ViewData["Title"] = "خانه";
 }
@@ -27,11 +26,10 @@
                 <a href=""> مشاهده همه دوره ها </a>
             </header>
             <div class="row">
-                @foreach (var item in Model)
-                {
-                    <partial name="_BoxCourse" model="@item" />
-                }
+                <cache expires-after="@TimeSpan.FromMinutes(5)">
 
+                @await Component.InvokeAsync("LatesCourseComponent");
+                </cache>
             </div>
         </section>
 
@@ -48,10 +46,10 @@
                 }
                 @if (popular != null)
                 {
-@*                     foreach (var item in popular.ToList())
-                    {
-                        <partial name="_BoxCourse" model="item" />
-                    } *@
+                    @*                     foreach (var item in popular.ToList())
+                {
+                <partial name="_BoxCourse" model="item" />
+                } *@
                 }
             </div>
         </section>

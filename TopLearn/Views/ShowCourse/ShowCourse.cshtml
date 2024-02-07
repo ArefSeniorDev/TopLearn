@@ -1,5 +1,6 @@
 ﻿@using TopLearn.Core.Convertors
 @using TopLearn.Core.Services.Interfaces
+@using TopLearn.DataLayer.Entities.Course;
 @model TopLearn.DataLayer.Entities.Course.Course
 
 @inject IOrderService _OrderService;
@@ -34,6 +35,15 @@
                 <section class="term-description">
                     <img src="/images/course/image/@Model.CourseImageName">
 
+                    @if (!string.IsNullOrEmpty(Model.DemoFileName) && Model.DemoFileName != "no-photo.jpg")
+                    {
+                        <video style="width: 100%" controls="" poster="/images/course/image/@Model.CourseImageName">
+                            <source src="/images/course/demos/@Model.DemoFileName" />
+                        </video>
+                    }
+                    <div id="vot">
+                    </div>
+
                     @Html.Raw(Model.CourseDescription)
 
                     @if (!IsUserInCourse)
@@ -44,6 +54,17 @@
                     }
 
                     <h2> سرفصل های این دوره : </h2>
+                    @if (ViewBag.Episode != null)
+                    {
+                        CourseEpisode episode = ViewBag.Episode as CourseEpisode;
+
+
+
+                        <h2>@episode.EpisodeTitle</h2>
+                        <video controls style="width: 100%">
+                            <source src="@ViewBag.filePath" />
+                        </video>
+                    }
                     <ul>
                         @foreach (var item in Model.CourseEpisodes)
                         {
@@ -70,6 +91,14 @@
                                 else
                                 {
                                     <i> نقدی </i>
+                                }
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    if (item.IsFree || IsUserInCourse)
+                                    {
+                                        <a href="/ShowCourse/@Model.CourseId?episode=@item.EpisodeId">تماشا</a>
+                                    }
+
                                 }
                                 <span>@item.EpisodeTime</span>
                             </li>
@@ -204,5 +233,34 @@
         function pageComment(pageid) {
             $("#listComment").load("/ShowCourse/ShowComment/" + @Model.CourseId+"?pageId=" + pageid);
         }
+        $(function () {
+            $("#vot").load("/ShowCourse/VoteCourse/@Model.CourseId")
+        })
+        function vote(vote) {
+            $("#vot").fadeOut('slow');
+            $("#vot").load("/ShowCourse/AddVote/@(Model.CourseId)?vote=" + vote);
+            $("#vot").fadeIn('slow');
+        }
     </script>
+    @*         // <script>
+               //     var btn1 = document.querySelector('#green');
+               //     var btn2 = document.querySelector('#red');
+
+               //     btn1.addEventListener('click', function () {
+
+               //         if (btn2.classList.contains('red')) {
+               //             btn2.classList.remove('red');
+               //         }
+               //         this.classList.toggle('green');
+
+               //     });
+
+               //     btn2.addEventListener('click', function () {
+               //         if (btn1.classList.contains('green')) {
+               //             btn1.classList.remove('green');
+               //         }
+               //         this.classList.toggle('red');
+
+               //     });
+               // // </script> *@
 }

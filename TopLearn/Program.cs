@@ -53,6 +53,26 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.Value.ToString().ToLower().StartsWith("/coursefilesonline"))
+    {
+        var callingurl = context.Request.Headers["Referer"].ToString();
+        if (callingurl != "" && (callingurl.StartsWith("https://localhost:7089") || callingurl.StartsWith("http://localhost:7089")))
+        {
+            await next.Invoke();
+        }
+        else
+        {
+            context.Response.Redirect("/AccessDenied");
+        }
+    }
+    else
+    {
+        await next.Invoke();
+    }
+}
+);
 
 app.UseHttpsRedirection();
 

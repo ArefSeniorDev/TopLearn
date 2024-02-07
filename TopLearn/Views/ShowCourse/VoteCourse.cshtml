@@ -1,0 +1,8 @@
+﻿@model Tuple<int,int>
+@if (User.Identity.IsAuthenticated)
+{
+    <script src="https://use.fontawesome.com/fe459689b4.js"></script>
+    <button onclick="vote(true)" style="color:green" class="btn" id="green">@Model.Item1<i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i></button>
+    <button onclick="vote(false)" style="color:red" class="btn" id="red">@Model.Item2<i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i></button>
+}
+
