@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using TopLearn.DataLayer.Entities.Course;
 using TopLearn.DataLayer.Entities.Order;
 using TopLearn.DataLayer.Entities.Permissions;
+using TopLearn.DataLayer.Entities.Question;
 using TopLearn.DataLayer.Entities.User;
 using TopLearn.DataLayer.Entities.Wallet;
 
@@ -18,6 +19,12 @@ namespace TopLearn.DataLayer.Context
 
         }
 
+        #region Question
+
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<Answer> Answers { get; set; }
+
+        #endregion
 
         #region User
 

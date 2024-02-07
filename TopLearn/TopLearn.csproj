@@ -54,4 +54,12 @@
     <Folder Include="wwwroot\CourseOnline\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Forum\CreateQuestion.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Forum\CreateQuestion.cshtml" />
+  </ItemGroup>
+
 </Project>

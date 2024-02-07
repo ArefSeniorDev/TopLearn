@@ -76,6 +76,8 @@ namespace TopLearn.DataLayer.Entities.Course
         public virtual List<UserCourse> UserCourses { get; set; }
         public virtual List<CourseComment> CourseComments { get; set; }
         public virtual List<CourseVote> CourseVotes { get; set; }
+        public virtual List<Question.Question> Questions { get; set; }
+
 
 
         #endregion

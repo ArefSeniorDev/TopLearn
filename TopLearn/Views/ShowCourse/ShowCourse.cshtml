@@ -202,13 +202,14 @@
                     <a href=""><i class="zmdi zmdi-twitter"></i></a>
                     <a href=""><i class="zmdi zmdi-linkedin"></i></a>
                 </div>
-
+                <a href="/forum/CreateQuestion/@Model.CourseId" class="btn btn-block btn-warning">پرسش و پاسخ</a>
+                <hr />
                 @if (Model.Tags != null)
                 {
                     <div class="tags-layer">
                         @foreach (string tag in Model.Tags.Split('-', StringSplitOptions.RemoveEmptyEntries))
                         {
-                            <a href="/Course?filter=@tag"> @tag </a>
+                            <a href="/ShowCourse?filter=@tag"> @tag </a>
                         }
                     </div>
                 }
