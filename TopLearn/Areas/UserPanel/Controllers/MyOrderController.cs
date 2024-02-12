@@ -47,6 +47,13 @@ namespace TopLearn.Areas.UserPanel.Controllers
             }
             return BadRequest();
         }
+        [HttpPost]
+        public IActionResult DeleteOrder(int OrderId, int OrderIdDetail)
+        {
+            _orderService.DeleteOrderDetail(OrderId, OrderIdDetail);
+
+            return Redirect("/UserPanel/MyOrder/ShowOrder/" + OrderId);
+        }
         public IActionResult UseDiscount(int orderId, string code)
         {
             DiscountUseType Type = _orderService.UseDiscount(orderId, code);

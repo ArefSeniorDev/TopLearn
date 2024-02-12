@@ -28,6 +28,16 @@ namespace TopLearn.Core.Services
             return question.QuestionId;
         }
 
+        public IEnumerable<Question> GetQuestion(int? courseId, string filter = "")
+        {
+            IQueryable<Question> result = _context.Questions.Where(q => EF.Functions.Like(q.Title, $"%{filter}%"));
+            if (courseId != null)
+            {
+                result = result.Where(x => x.CourseId == courseId);
+            }
+            return result.Include(x=>x.User).Include(x=>x.Course).ToList();
+        }
+
         public ShowQuestionViewModel ShowQuestion(int questionId)
         {
             var question = new ShowQuestionViewModel();
@@ -40,6 +50,21 @@ namespace TopLearn.Core.Services
         public void AddAnswer(Answer answer)
         {
             _context.Answers.Add(answer);
+            _context.SaveChanges();
+        }
+
+        public void UpdateIsTrueAnswer(int questionId, int answerId)
+        {
+            var answer = _context.Answers.Where(x => x.QuestionId == questionId);
+            foreach (var item in answer)
+            {
+                item.IsTrueAnswer = false;
+                if (item.AnswerId == answerId)
+                {
+                    item.IsTrueAnswer = true;
+                }
+            }
+            _context.UpdateRange(answer);
             _context.SaveChanges();
         }
     }

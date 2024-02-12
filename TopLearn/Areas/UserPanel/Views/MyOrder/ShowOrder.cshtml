@@ -40,6 +40,7 @@
                                     <th>تعداد</th>
                                     <th>قیمت</th>
                                     <th>جمع</th>
+                                    <th>دستورات</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -64,6 +65,14 @@
                                         <td>@item.Price.ToString("#,0")</td>
                                         <td>
                                             @((item.Count * item.Price).ToString("#,0"))
+                                        </td>
+                                        <td>
+                                            <form method="post" action="/UserPanel/MyOrder/DeleteOrder">
+                                                <input type="hidden" name="OrderId" value="@item.OrderId" />
+                                                <input type="hidden" name="OrderIdDetail" value="@item.DetailId" />
+                                                <input type="submit" class="btn btn-danger btn-sm" style="margin-top: 5px" value="حذف" />
+                                            </form>
+
                                         </td>
                                     </tr>
                                 }

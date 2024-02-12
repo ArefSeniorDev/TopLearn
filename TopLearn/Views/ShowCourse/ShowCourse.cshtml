@@ -2,17 +2,19 @@
 @using TopLearn.Core.Services.Interfaces
 @using TopLearn.DataLayer.Entities.Course;
 @model TopLearn.DataLayer.Entities.Course.Course
-
+@inject ICourseService _CourseService;
 @inject IOrderService _OrderService;
 
 @{
     ViewData["Title"] = Model.CourseTitle;
 
     bool IsUserInCourse = false;
+    bool IscourseFree = false;
 
     if (User.Identity.IsAuthenticated)
     {
         IsUserInCourse = _OrderService.IsUserInCourse(User.Identity.Name, Model.CourseId);
+        IscourseFree = _CourseService.GetCourseIsFreeById(Model.CourseId);
     }
 }
 
@@ -41,12 +43,16 @@
                             <source src="/images/course/demos/@Model.DemoFileName" />
                         </video>
                     }
-                    <div id="vot">
-                    </div>
+
+                    @if (IsUserInCourse || IscourseFree)
+                    {
+                        <div id="vot">
+                        </div>
+                    }
 
                     @Html.Raw(Model.CourseDescription)
 
-                    @if (!IsUserInCourse)
+                    @if (!IsUserInCourse && !IscourseFree)
                     {
                         <div class="alert alert-info">
                             <p>بعد از ثبت نام در این دوره و تایید فاکتور لینک های دانلود برای شما فعال خواهد شد</p>
@@ -112,25 +118,36 @@
                     <div class="inner">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <form asp-controller="ShowCourse" asp-action="CreateComment"
-                                  data-ajax="true"
-                                  data-ajax-method="post"
-                                  data-ajax-mode="replace"
-                                  data-ajax-update="#listComment"
-                                  data-ajax-success="Success">
-                                <input type="hidden" name="comment.CourseId" value="@Model.CourseId" />
-                                <div class="row">
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <div class="form-group">
-                                            <textarea class="form-control" id="comment_Comment" name="comment.Comment" placeholder="متن نظر"></textarea>
-                                        </div>
+                            if (IsUserInCourse || IscourseFree)
+                            {
 
+                                <form asp-controller="ShowCourse" asp-action="CreateComment"
+                                      data-ajax="true"
+                                      data-ajax-method="post"
+                                      data-ajax-mode="replace"
+                                      data-ajax-update="#listComment"
+                                      data-ajax-success="Success">
+                                    <input type="hidden" name="comment.CourseId" value="@Model.CourseId" />
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <div class="form-group">
+                                                <textarea class="form-control" id="comment_Comment" name="comment.Comment" placeholder="متن نظر"></textarea>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <button type="submit" class="btn btn-success"> ثبت دیدگاه </button>
+                                        </div>
                                     </div>
-                                    <div class="col-xs-12">
-                                        <button type="submit" class="btn btn-success"> ثبت دیدگاه </button>
-                                    </div>
+                                </form>
+                            }
+                            else
+                            {
+                                <div class="alert alert-danger">
+                                    جهت درج نظر باید دوره را خریداری کرده باشید
                                 </div>
-                            </form>
+                            }
+
                         }
                         else
                         {
@@ -202,7 +219,25 @@
                     <a href=""><i class="zmdi zmdi-twitter"></i></a>
                     <a href=""><i class="zmdi zmdi-linkedin"></i></a>
                 </div>
-                <a href="/forum/CreateQuestion/@Model.CourseId" class="btn btn-block btn-warning">پرسش و پاسخ</a>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    if (IsUserInCourse || IscourseFree)
+                    {
+                        <a asp-controller="Forum" asp-action="Index" asp-route-courseId="@Model.CourseId" class="btn btn-block btn-warning">پرسش و پاسخ</a>
+                    }
+                    else
+                    {
+                        <p class="alert alert-warning">
+                            برای شرکت در نظرسنجی باید دوره را خریداری کنید
+                        </p>
+                    }
+                }
+                else
+                {
+                    <p class="alert alert-warning">
+                        برای شرکت در نظرسنجی لطفا ورود کنید
+                    </p>
+                }
                 <hr />
                 @if (Model.Tags != null)
                 {

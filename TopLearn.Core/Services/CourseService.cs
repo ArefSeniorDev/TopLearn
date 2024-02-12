@@ -159,6 +159,11 @@ namespace TopLearn.Core.Services
             return _context.CourseGroups.SingleOrDefault(x => x.GroupId == id);
         }
 
+        public bool GetCourseIsFreeById(int Id)
+        {
+            return _context.Courses.Any(x => x.CoursePrice <= 0 && x.CourseId == Id);
+        }
+
         public Tuple<List<ShowCourseListItemViewModel>, int> GetCourse(int pageId = 1, string filter = ""
            , string getType = "all", string orderByType = "date",
            int startPrice = 0, int endPrice = 0, List<int> selectedGroups = null, int take = 0)

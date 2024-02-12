@@ -1,6 +1,8 @@
 ﻿@model TopLearn.Core.DTOs.QuestionVM.ShowQuestionViewModel
 @using TopLearn.Core.Convertors
-
+@using TopLearn.Core.Services.Interfaces
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@inject IUserService _userService;
 @{
     ViewData["Title"] = "پرسش " + Model.Question.Title;
 }
@@ -9,7 +11,7 @@
     <nav aria-label="breadcrumb">
         <ul class="breadcrumb">
             <li class="breadcrumb-item"><a href="/"> تاپ لرن </a></li>
-            <li class="breadcrumb-item"><a href="/Forum/Questions"> پرسش و پاسخ </a></li>
+            <li class="breadcrumb-item"><a href="/Forum/ShowQuestion"> پرسش و پاسخ </a></li>
             <li class="breadcrumb-item active" aria-current="page"> @Model.Question.Title </li>
         </ul>
     </nav>
@@ -23,6 +25,7 @@
                     <div class="panel-heading">
                         <h1>@Model.Question.Title</h1>
                     </div>
+                    <input type="hidden" asp-for="Question.CourseId" />
                     <div class="panel-body">
                         @Html.Raw(Model.Question.Body)
                     </div>
@@ -38,37 +41,43 @@
             <div class="inner" style="margin-top: 25px;">
                 @foreach (var answer in Model.Answers)
                 {
-                    <div class="panel">
+                    <div class="panel @((answer.IsTrueAnswer) ? "IsTrue" : "")">
                         <div class="panel-heading">
                             <img src="~/UserAvatar/@answer.User.UserAvatar" style="max-width: 40px; border-radius: 20px;" />
-                            @answer.User.UserName | @answer.CreateDate.ToShamsi()
+                            @answer.User.UserName | @answer.CreateDate.ToShamsi() | @answer.AnswerdTime
+
                         </div>
                         <div class="panel-body">
                             @Html.Raw(answer.BodyAnswer)
+                            @if (!answer.IsTrueAnswer && User.Identity.IsAuthenticated && @answer.UserId == _userService.GetUserIdByUserName(User.Identity.Name))
+                            {
+                                <p>
+                                    <a class="btn btn-outline btn-success pull-left" asp-action="UpdateQuestion" asp-route-questionId="@answer.QuestionId" asp-route-answerId="@answer.AnswerId">
+                                        پاسخ صحیح
+                                    </a>
+                                </p>
+                            }
                         </div>
                     </div>
                 }
             </div>
-
-            @if (User.Identity.IsAuthenticated)
-            {
-                <div class="inner" style="margin-top: 25px;">
-                    <div class="panel">
-                        <div class="panel-heading">
-                            <h1 style="font-size: 18px;" class="text-success text-muted">افزودن پاسخ جدید</h1>
-                        </div>
-                        <div class="panel-body">
-                            <form asp-action="Answer">
-                                <div class="form-group">
-                                    <input type="hidden" name="Id" value="@Model.Question.QuestionId"/>
-                                    <textarea  name="body"></textarea>
-                                    <button class="btn btn-block btn-success" style="margin-top: 20px; height: 50px; font-size:15px;" type="submit">ثبت پاسخ شما</button>
-                                </div>
-                            </form>
-                        </div>
+            <div class="inner" style="margin-top: 25px;">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h1 style="font-size: 18px;" class="text-success text-muted">افزودن پاسخ جدید</h1>
+                    </div>
+                    <div class="panel-body">
+                        <form asp-action="Answer">
+                            <div class="form-group">
+                                <input type="hidden" name="Id" value="@Model.Question.QuestionId" />
+                                <textarea name="body"></textarea>
+                                <button class="btn btn-block btn-success" style="margin-top: 20px; height: 50px; font-size:15px;" type="submit">ثبت پاسخ شما</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            }
+            </div>
+
         </div>
     </div>
 </div>

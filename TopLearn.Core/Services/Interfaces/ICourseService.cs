@@ -34,6 +34,7 @@ namespace TopLearn.Core.Services.Interfaces
         int AddCourse(Course course, IFormFile imgCourse, IFormFile courseDemo);
         void UpdateCourse(Course course, IFormFile imgCourse, IFormFile courseDemo);
         Course GetCourseById(int Id);
+        bool GetCourseIsFreeById(int Id);
 
 
 
@@ -67,7 +68,7 @@ namespace TopLearn.Core.Services.Interfaces
 
         #region CourseVote
         void AddVote(int courseId, int userId, bool vote);
-        Tuple<int,int> GetCourseVote(int courseId);
+        Tuple<int, int> GetCourseVote(int courseId);
         #endregion
     }
 }

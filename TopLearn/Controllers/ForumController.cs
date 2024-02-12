@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Ganss.Xss;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TopLearn.Core.Services.Interfaces;
+using TopLearn.DataLayer.Entities.Course;
 using TopLearn.DataLayer.Entities.Question;
 
 namespace TopLearn.Controllers
@@ -9,15 +11,26 @@ namespace TopLearn.Controllers
     {
         IForumService _forumService;
         IUserService _userService;
+        IOrderService _orderService;
 
-        public ForumController(IForumService forumService, IUserService userService)
+        public ForumController(IForumService forumService, IUserService userService, IOrderService orderService)
         {
             _forumService = forumService;
             _userService = userService;
+            _orderService = orderService;
         }
-        public IActionResult Index()
+        [Authorize]
+        public IActionResult Index(int? courseId, string filter = "")
         {
-            return View();
+            if (courseId != null)
+            {
+                if (!_orderService.IsUserInCourse(User.Identity.Name, Convert.ToInt32(courseId)))
+                {
+                    return Redirect("/ShowCourse/" + courseId);
+                }
+            }
+            ViewBag.CourseId = courseId;
+            return View(_forumService.GetQuestion(courseId, filter));
         }
 
         #region CreateQuestion
@@ -41,36 +54,53 @@ namespace TopLearn.Controllers
 
             question.UserId = _userService.GetUserIdByUserName(User.Identity.Name);
             int questionId = _forumService.AddQuestion(question);
-            return Redirect("/Forum/ShowQuestion" + questionId);
+            return Redirect("/Forum/ShowQuestion/" + questionId);
         }
         #endregion
 
         #region ShowQuestion
-
-        public IActionResult ShowQuestion(int Id)
+        [Authorize]
+        public IActionResult ShowQuestion(int questionId)
         {
-            return View(_forumService.ShowQuestion(Id));
+            return View(_forumService.ShowQuestion(questionId));
         }
 
         #endregion
 
         #region Answer
+        [Authorize]
 
         public IActionResult Answer(int Id, string body)
         {
             if (!string.IsNullOrEmpty(body))
             {
+                var sanitizer = new HtmlSanitizer();
+                body = sanitizer.Sanitize(body);
                 int UserId = _userService.GetUserIdByUserName(User.Identity.Name);
                 DataLayer.Entities.Question.Answer answer = new Answer()
                 {
                     BodyAnswer = body,
                     CreateDate = DateTime.Now,
                     UserId = UserId,
-                    QuestionId = Id
+                    QuestionId = Id,
+                    AnswerdTime = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second)
+
                 };
                 _forumService.AddAnswer(answer);
             }
             return RedirectToAction("ShowQuestion", new { id = Id });
+        }
+        [Authorize]
+        public IActionResult UpdateQuestion(int questionId, int answerId)
+        {
+            int UserId = _userService.GetUserIdByUserName(User.Identity.Name);
+            var question = _forumService.ShowQuestion(questionId);
+            if (question.Question.UserId == UserId)
+            {
+                _forumService.UpdateIsTrueAnswer(questionId, answerId);
+            }
+
+            return RedirectToAction("ShowQuestion", new { id = questionId });
         }
         #endregion
 

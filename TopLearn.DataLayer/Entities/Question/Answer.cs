@@ -19,8 +19,12 @@ namespace TopLearn.DataLayer.Entities.Question
         public User.User User { get; set; }
         [Required]
         public string BodyAnswer { get; set; }
+
+        public bool IsTrueAnswer { get; set; } = false;
+
         [Required]
         public DateTime CreateDate { get; set; }
+        public TimeSpan AnswerdTime { get; set; }
 
 
 

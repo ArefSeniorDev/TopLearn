@@ -13,12 +13,14 @@ namespace TopLearn.Core.Services.Interfaces
         #region Question
 
         public int AddQuestion(Question question);
+        public IEnumerable<Question> GetQuestion(int? courseId, string filter = "");
 
         #endregion
 
         #region Answare
         ShowQuestionViewModel ShowQuestion(int questionId);
         void AddAnswer(Answer answer);
+        void UpdateIsTrueAnswer(int questionId, int answerId);
 
         #endregion
     }

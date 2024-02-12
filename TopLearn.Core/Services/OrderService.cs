@@ -94,6 +94,13 @@ namespace TopLearn.Core.Services
             _context.SaveChanges();
         }
 
+        public void DeleteOrderDetail(int OrderId, int DetailOrderId)
+        {
+            var orderdetail = _context.OrderDetails.SingleOrDefault(x => x.DetailId == DetailOrderId && x.OrderId == OrderId);
+            _context.OrderDetails.Remove(orderdetail);
+            _context.SaveChanges();
+        }
+
         public bool FinallyOrder(string UserName, int OrderId)
         {
             int UserId = _userService.GetUserIdByUserName(UserName);
