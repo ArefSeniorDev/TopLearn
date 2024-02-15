@@ -54,7 +54,7 @@ namespace TopLearn.Controllers
 
             question.UserId = _userService.GetUserIdByUserName(User.Identity.Name);
             int questionId = _forumService.AddQuestion(question);
-            return Redirect("/Forum/ShowQuestion/" + questionId);
+            return RedirectToAction("ShowQuestion", new { questionId = questionId });
         }
         #endregion
 
@@ -62,7 +62,8 @@ namespace TopLearn.Controllers
         [Authorize]
         public IActionResult ShowQuestion(int questionId)
         {
-            return View(_forumService.ShowQuestion(questionId));
+            var showquestion = _forumService.ShowQuestion(questionId);
+            return View(showquestion);
         }
 
         #endregion
@@ -88,7 +89,7 @@ namespace TopLearn.Controllers
                 };
                 _forumService.AddAnswer(answer);
             }
-            return RedirectToAction("ShowQuestion", new { id = Id });
+            return RedirectToAction("ShowQuestion", new { questionId = Id });
         }
         [Authorize]
         public IActionResult UpdateQuestion(int questionId, int answerId)
@@ -100,7 +101,7 @@ namespace TopLearn.Controllers
                 _forumService.UpdateIsTrueAnswer(questionId, answerId);
             }
 
-            return RedirectToAction("ShowQuestion", new { id = questionId });
+            return RedirectToAction("ShowQuestion", new { questionId = questionId });
         }
         #endregion
 

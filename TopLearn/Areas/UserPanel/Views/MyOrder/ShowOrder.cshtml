@@ -40,7 +40,10 @@
                                     <th>تعداد</th>
                                     <th>قیمت</th>
                                     <th>جمع</th>
-                                    <th>دستورات</th>
+                                    @if (!Model.IsFinaly)
+                                    {
+                                        <th>دستورات</th>
+                                    }
                                 </tr>
                             </thead>
                             <tbody>
@@ -66,15 +69,23 @@
                                         <td>
                                             @((item.Count * item.Price).ToString("#,0"))
                                         </td>
-                                        <td>
-                                            <form method="post" action="/UserPanel/MyOrder/DeleteOrder">
-                                                <input type="hidden" name="OrderId" value="@item.OrderId" />
-                                                <input type="hidden" name="OrderIdDetail" value="@item.DetailId" />
-                                                <input type="submit" class="btn btn-danger btn-sm" style="margin-top: 5px" value="حذف" />
-                                            </form>
 
-                                        </td>
+                                        @if (!Model.IsFinaly)
+                                        {
+                                            <td>
+
+
+                                                <form method="post" action="/UserPanel/MyOrder/DeleteOrder">
+                                                    <input type="hidden" name="OrderId" value="@item.OrderId" />
+                                                    <input type="hidden" name="OrderIdDetail" value="@item.DetailId" />
+                                                    <input type="submit" class="btn btn-danger btn-sm" style="margin-top: 5px" value="حذف" />
+                                                </form>
+                                            </td>
+                                        }
+
+
                                     </tr>
+
                                 }
                                 @if (!Model.IsFinaly)
                                 {
@@ -130,7 +141,8 @@
                                         جمع کل :
                                         @sumOrder.ToString("#,0")
                                         <hr />
-                                        @if (ViewBag.IsArchive == null)
+
+                                        @if (!Model.IsFinaly)
                                         {
                                             <p>
                                                 موجودی کیف پول شما:

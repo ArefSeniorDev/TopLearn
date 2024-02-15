@@ -112,15 +112,21 @@ namespace TopLearn.DataLayer.Context
               .WithMany(g => g.Courses)
               .HasForeignKey(f => f.StatusId);
 
-            modelBuilder.Entity<OrderDetail>()
-              .HasOne<Course>(f => f.Course)
-              .WithMany(g => g.OrderDetail)
-              .HasForeignKey(f => f.OrderId);
+            //modelBuilder.Entity<OrderDetail>()
+            //  .HasOne<Course>(f => f.Course)
+            //  .WithMany(g => g.OrderDetail)
+            //  .HasForeignKey(f => f.OrderId);
 
-            modelBuilder.Entity<OrderDetail>()
-               .HasOne<Order>(f => f.Order)
-               .WithMany(g => g.OrderDetails)
-               .HasForeignKey(f => f.OrderId);
+            //modelBuilder.Entity<OrderDetail>()
+            //   .HasOne<Order>(f => f.Order)
+            //   .WithMany(g => g.OrderDetails)
+            //   .HasForeignKey(f => f.OrderId);
+
+
+
+            #region SeedData
+
+
             // modelBuilder.Entity<Permission>()
             //.HasData
             //(
@@ -144,6 +150,8 @@ namespace TopLearn.DataLayer.Context
             //(
             // new User() { Email = "Aref@gmail.com", IsActive = true, RegisterDate = DateTime.Now, UserName = "Aref", Password = "Admin", }
             //);
+            #endregion
+
             base.OnModelCreating(modelBuilder);
         }
 

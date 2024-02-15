@@ -3,12 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using TopLearn.Core.DTOs.Enum;
 using TopLearn.Core.Services.Interfaces;
 using TopLearn.DataLayer.Context;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using TopLearn.Core.DTOs.UserViewModel;
+using TopLearn.Core.Services;
+using TopLearn.Core.Services.Interfaces;
 using TopLearn.DataLayer.Entities.Course;
 using TopLearn.DataLayer.Entities.Order;
+using TopLearn.DataLayer.Entities.User;
 
 namespace TopLearn.Core.Services
 {
@@ -97,7 +104,18 @@ namespace TopLearn.Core.Services
         public void DeleteOrderDetail(int OrderId, int DetailOrderId)
         {
             var orderdetail = _context.OrderDetails.SingleOrDefault(x => x.DetailId == DetailOrderId && x.OrderId == OrderId);
-            _context.OrderDetails.Remove(orderdetail);
+            var order = _context.Orders.SingleOrDefault(x => x.OrderId == OrderId);
+            if (orderdetail.Count > 1)
+            {
+                orderdetail.Count -= 1;
+                order.OrderSum -= orderdetail.Price;
+                _context.OrderDetails.Update(orderdetail);
+            }
+            else
+            {
+                _context.OrderDetails.Remove(orderdetail);
+                _context.Orders.Remove(order);
+            }
             _context.SaveChanges();
         }
 
@@ -160,8 +178,7 @@ namespace TopLearn.Core.Services
         public Order GetOrderForUserPanel(string UserName, int OrderId)
         {
             int UserId = _userService.GetUserIdByUserName(UserName);
-
-            return _context.Orders.Include(x => x.OrderDetails).ThenInclude(x => x.Course).SingleOrDefault(x => x.OrderId == OrderId && x.UserId == UserId);
+            return _context.Orders.Include(x => x.OrderDetails).ThenInclude(x => x.Course).FirstOrDefault(x => x.OrderId == OrderId && x.UserId == UserId);
         }
 
         public List<Order> GetUserOrders(string UserName)
