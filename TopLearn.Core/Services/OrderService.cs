@@ -87,7 +87,7 @@ namespace TopLearn.Core.Services
                     _context.OrderDetails.Add(detail);
                 }
 
-                _context.SaveChanges();
+                 _context.SaveChanges();
                 UpdateOrderPrice(order.OrderId);
             }
 

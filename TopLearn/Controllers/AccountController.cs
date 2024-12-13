@@ -59,7 +59,7 @@ namespace TopLearn.Controllers
                 Password = PasswordHelper.EncodePasswordMd5(register.Password),
                 Email = register.Email,
                 ActiveCode = GetUserActiveCode.GetActiveCode(),
-                IsActive = false,
+                IsActive = true,
                 RegisterDate = DateTime.Now,
                 UserAvatar = "Defult.jpg",
             };
@@ -67,7 +67,7 @@ namespace TopLearn.Controllers
 
             #region Active Account 
             string body = _viewrender.RenderToStringAsync("_ActiveEmail", user);
-            SendEmail.Send(user.Email, "فعالسازی", body);
+            //SendEmail.Send(user.Email, "فعالسازی", body);
 
             #endregion
 

@@ -20,7 +20,7 @@ builder.Services.AddControllersWithViews();
 
 #region DBContext
 builder.Services.AddDbContext<TopLearnContext>(options =>
-options.UseSqlServer("Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=TopLearn;Data Source=."));
+options.UseSqlServer("Integrated Security=SSPI;Persist Security Info=False;Trust Server Certificate=True;Initial Catalog=TopLearn;Data Source=."));
 #endregion
 
 #region IOC
